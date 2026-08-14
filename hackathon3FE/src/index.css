@@ -1,1 +1,100 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Minimal global styles only — component/layout styling is handled with Tailwind classes in components */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+@tailwind utilities;
+
+html,
+body {
+  background-color: #535353;
+}
+#root {
+  height: 100%;
+}
+
+/* Always show framed app; frame scales to fit small viewports while preserving aspect ratio */
+.app-outer {
+  background-color: #535353;
+  position: relative;
+  overflow: hidden; /* prevent outer scroll on desktop */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+.app-frame {
+  /* frame width is min(420px, 94vw) and height keeps aspect ratio 420:844 */
+  --frame-w: min(420px, 94vw);
+  --frame-h: calc(var(--frame-w) * 844 / 420);
+  width: var(--frame-w);
+  height: var(--frame-h);
+  max-height: calc(
+    100vh - 48px
+  ); /* ensure frame does not exceed viewport height */
+  border-radius: 1rem;
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: auto; /* internal scrolling only */
+  background: #fff;
+  position: relative;
+  z-index: 10;
+}
+
+/* soft glow behind the framed app, sized relative to the frame */
+.app-outer::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--frame-w) + 100px);
+  height: calc(var(--frame-h) + 100px);
+  border-radius: 1.25rem;
+  background: radial-gradient(
+    closest-side,
+    rgba(99, 102, 241, 0.12),
+    rgba(99, 102, 241, 0) 60%
+  );
+  filter: blur(30px);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Mobile overrides: fill viewport, remove black margins and glow */
+@media (max-width: 767px) {
+  .app-outer {
+    background-color: #ffffff; /* white background on small screens */
+    padding: 0; /* remove outer padding so frame margins control spacing */
+  }
+  .app-outer::before {
+    display: none;
+  }
+  .app-frame {
+    /* explicit side margins on the frame itself */
+    margin: 0 16px;
+    box-sizing: border-box;
+    --frame-w: calc(100vw - 32px);
+    --frame-h: calc(var(--frame-w) * 844 / 420);
+    width: var(--frame-w);
+    height: var(--frame-h);
+    border-radius: 0.75rem;
+    box-shadow: none;
+    border: none;
+  }
+  /* prevent body scrolling behind full-bleed app */
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+  }
+}
