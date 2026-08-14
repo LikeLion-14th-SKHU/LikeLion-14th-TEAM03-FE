@@ -2,10 +2,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Home from "./pages/Home";
 import Onboarding from "./pages/Onboarding";
 import SkinResult from "./pages/SkinResult";
-import Cards from "./pages/Cards";
-import Todo from "./pages/Todo";
-import Notifications from "./pages/Notifications";
-import Plan from "./pages/Plan";
+import DDayEnd from "./pages/DDayEnd";
 import Mypage from "./pages/Mypage";
 import NotFound from "./pages/NotFound";
 
@@ -27,17 +24,8 @@ function App() {
                 <Link to="/skin-result" className="text-blue-600">
                   피부결과
                 </Link>
-                <Link to="/cards" className="text-blue-600">
-                  카드
-                </Link>
-                <Link to="/todo" className="text-blue-600">
-                  투두
-                </Link>
-                <Link to="/notifications" className="text-blue-600">
-                  알림
-                </Link>
-                <Link to="/plan" className="text-blue-600">
-                  플랜
+                <Link to="/d-dayend" className="text-blue-600">
+                  D-Day 종료
                 </Link>
                 <Link to="/mypage" className="text-blue-600">
                   마이페이지
@@ -51,10 +39,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/skin-result" element={<SkinResult />} />
-              <Route path="/cards" element={<Cards />} />
-              <Route path="/todo" element={<Todo />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/plan" element={<Plan />} />
+              <Route path="/d-dayend" element={<DDayEnd />} />
               <Route path="/mypage" element={<Mypage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
