@@ -13,7 +13,7 @@ body,
 
 html,
 body {
-  background-color: #535353;
+  background-color: #ffffff;
 }
 #root {
   height: 100%;
@@ -21,7 +21,7 @@ body {
 
 /* Always show framed app; frame scales to fit small viewports while preserving aspect ratio */
 .app-outer {
-  background-color: #535353;
+  background-color: #fcf9f9;
   position: relative;
   overflow: hidden; /* prevent outer scroll on desktop */
   display: flex;
@@ -46,7 +46,7 @@ body {
   overflow: auto; /* internal scrolling only */
   background: #fff;
   position: relative;
-  z-index: 10;
+  z-index: 1;
 }
 
 /* soft glow behind the framed app, sized relative to the frame */
@@ -73,20 +73,23 @@ body {
 @media (max-width: 767px) {
   .app-outer {
     background-color: #ffffff; /* white background on small screens */
-    padding: 0; /* remove outer padding so frame margins control spacing */
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh;
+    border-radius: 0;
   }
   .app-outer::before {
     display: none;
   }
   .app-frame {
-    /* explicit side margins on the frame itself */
-    margin: 0 16px;
     box-sizing: border-box;
-    --frame-w: calc(100vw - 32px);
-    --frame-h: calc(var(--frame-w) * 844 / 420);
-    width: var(--frame-w);
-    height: var(--frame-h);
-    border-radius: 0.75rem;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    border-radius: 0;
     box-shadow: none;
     border: none;
   }
