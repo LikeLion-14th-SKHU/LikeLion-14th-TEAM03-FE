@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -8,27 +8,36 @@ import DDayEnd from "./pages/DDayEnd";
 import Mypage from "./pages/Mypage";
 import NotFound from "./pages/NotFound";
 
+function AppShell() {
+  const location = useLocation();
+  const isOnboarding = location.pathname === "/onboarding";
+
+  return (
+    <div className="app-outer min-h-screen flex items-center justify-center bg-gray-50 md:bg-gray-900">
+      <div className="app-frame flex h-[844px] w-full max-w-[420px] flex-col overflow-hidden rounded-[1rem] border border-white/5 bg-white text-gray-800 shadow-2xl">
+        {!isOnboarding && <Header />}
+
+        <main className="flex min-h-0 flex-1 flex-col px-4 py-6">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/skin-result" element={<SkinResult />} />
+            <Route path="/d-dayend" element={<DDayEnd />} />
+            <Route path="/mypage" element={<Mypage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+
+        {!isOnboarding && <Navbar />}
+      </div>
+    </div>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
-      <div className="app-outer min-h-screen flex items-center justify-center bg-gray-50 md:bg-gray-900">
-        <div className="app-frame flex flex-col w-full md:w-[420px] max-w-full h-auto md:h-[844px] bg-white text-gray-800 md:shadow-2xl md:rounded-2xl overflow-hidden md:border md:border-white/5">
-          <Header />
-
-          <main className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-6">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/onboarding" element={<Onboarding />} />
-              <Route path="/skin-result" element={<SkinResult />} />
-              <Route path="/d-dayend" element={<DDayEnd />} />
-              <Route path="/mypage" element={<Mypage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-
-          <Navbar />
-        </div>
-      </div>
+      <AppShell />
     </BrowserRouter>
   );
 }
