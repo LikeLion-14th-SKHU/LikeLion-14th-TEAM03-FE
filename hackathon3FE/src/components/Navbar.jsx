@@ -11,8 +11,8 @@ const navItems = [
 
 export default function Navbar() {
   return (
-    <nav className="mt-auto w-full pt-4">
-      <div className="mx-auto h-[60px] flex w-full items-center justify-between bg-[#eeeeee] px-3 py-5 shadow-none">
+    <nav className="sticky bottom-0 z-30 w-full shrink-0 bg-white pt-2">
+      <div className="mx-auto flex h-[60px] w-full items-center justify-between bg-[#eeeeee] px-3 shadow-none">
         {navItems.map(({ to, label, iconSrc }) => (
           <NavLink
             key={to}
@@ -20,7 +20,7 @@ export default function Navbar() {
             end={to === "/"}
             className={({ isActive }) => {
               return [
-                "flex flex-1 flex-col items-center justify-center gap-3 rounded-[14px] px-2 py-4 text-[11px] font-medium no-underline transition-colors duration-300 ease-out",
+                "flex flex-1 flex-col items-center justify-center gap-3 rounded-[14px] px-2 py-2 text-[11px] font-medium no-underline transition-colors duration-300 ease-out",
                 isActive ? "text-[#285E3C]" : "text-[#2A2A2A]",
               ].join(" ");
             }}

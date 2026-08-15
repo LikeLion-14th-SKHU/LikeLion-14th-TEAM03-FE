@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Onboarding from "./pages/Onboarding";
@@ -12,7 +13,9 @@ function App() {
     <BrowserRouter>
       <div className="app-outer min-h-screen flex items-center justify-center bg-gray-50 md:bg-gray-900">
         <div className="app-frame flex flex-col w-full md:w-[420px] max-w-full h-auto md:h-[844px] bg-white text-gray-800 md:shadow-2xl md:rounded-2xl overflow-hidden md:border md:border-white/5">
-          <main className="flex min-h-0 flex-1 flex-col overflow-auto px-4 py-6">
+          <Header />
+
+          <main className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-6">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/onboarding" element={<Onboarding />} />
