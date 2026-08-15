@@ -6,6 +6,8 @@ import Onboarding from "./pages/Onboarding";
 import SkinResult from "./pages/SkinResult";
 import DDayEnd from "./pages/DDayEnd";
 import Mypage from "./pages/Mypage";
+import ConcernNew from "./pages/ConcernNew";
+import ConcernHistory from "./pages/ConcernHistory";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
               <Route path="/skin-result" element={<SkinResult />} />
               <Route path="/d-dayend" element={<DDayEnd />} />
               <Route path="/mypage" element={<Mypage />} />
+              <Route path="/concern-input" element={<ConcernNew />} />
+              <Route path="/concern-history" element={<ConcernHistory />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
