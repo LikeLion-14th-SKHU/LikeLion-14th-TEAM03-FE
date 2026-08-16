@@ -1,15 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Minimal global styles only — component/layout styling is handled with Tailwind classes in components */
 html,
 body,
 #root {
   height: 100%;
   margin: 0;
 }
-@tailwind utilities;
 
 html,
 body {
