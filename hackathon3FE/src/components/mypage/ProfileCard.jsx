@@ -1,26 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { skinTypeLabel } from "../../utils/skinType";
-
-function getDday(goalDate) {
-  if (!goalDate) return null;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const target = new Date(goalDate);
-  target.setHours(0, 0, 0, 0);
-  return Math.round((target - today) / (1000 * 60 * 60 * 24));
-}
-
-function ddayLabel(dday) {
-  if (dday === null) return "";
-  if (dday === 0) return "D-DAY";
-  return dday > 0 ? `D-${dday}` : `D+${Math.abs(dday)}`;
-}
 
 export default function ProfileCard({ name, baseType, goalDate, onGoalDateChange }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(goalDate);
-
-  const dday = getDday(goalDate);
 
   function handleEditOpen() {
     setDraft(goalDate);
@@ -38,20 +22,16 @@ export default function ProfileCard({ name, baseType, goalDate, onGoalDateChange
   }
 
   return (
-    <div className="bg-[#EFEFEF] rounded-2xl shadow-sm p-4">
-      <div className="flex items-center justify-between">
+    <div className="bg-[#F8F8F8] rounded-2xl shadow-sm p-4">
+      <Link to="/skin-result" className="flex items-center justify-between">
         <div>
           <div className="text-[16px] font-bold text-[#1f1f1f]">{name}</div>
           <div className="mt-0.5 text-[12.5px] font-medium text-[#8a877f]">
             {skinTypeLabel(baseType)}타입
           </div>
         </div>
-        {dday !== null && (
-          <span className="text-[13px] font-bold text-[#285E3C] bg-white rounded-full px-3 py-1">
-            {ddayLabel(dday)}
-          </span>
-        )}
-      </div>
+        <span className="text-[#6C6C6C] text-[15px]">›</span>
+      </Link>
 
       <div className="mt-3 pt-3 border-t border-[#00000014]">
         <div className="flex items-center justify-between">
@@ -60,7 +40,7 @@ export default function ProfileCard({ name, baseType, goalDate, onGoalDateChange
             <button
               type="button"
               onClick={handleEditOpen}
-              className="text-[12.5px] font-bold text-[#285E3C]"
+              className="translate-y-4 text-[14px] font-bold text-[#2A2A2A]"
             >
               수정
             </button>
@@ -86,7 +66,7 @@ export default function ProfileCard({ name, baseType, goalDate, onGoalDateChange
               type="button"
               onClick={handleSave}
               disabled={!draft}
-              className="shrink-0 text-[12.5px] font-bold text-white bg-[#285E3C] disabled:opacity-50 rounded-lg px-3 py-1.5"
+              className="shrink-0 text-[12.5px] font-bold text-white bg-[#2A2A2A] disabled:opacity-50 rounded-lg px-3 py-1.5"
             >
               저장
             </button>

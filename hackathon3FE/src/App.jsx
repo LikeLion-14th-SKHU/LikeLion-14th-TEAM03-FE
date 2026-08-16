@@ -15,7 +15,7 @@ function App() {
         <div className="app-frame flex flex-col w-full md:w-[420px] max-w-full h-auto md:h-[844px] bg-white text-gray-800 md:shadow-2xl md:rounded-2xl overflow-hidden md:border md:border-white/5">
           <Header />
 
-          <main className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-6">
+          <main className="no-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-6">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/onboarding" element={<Onboarding />} />

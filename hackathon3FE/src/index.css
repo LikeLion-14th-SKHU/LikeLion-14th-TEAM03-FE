@@ -43,6 +43,20 @@ body {
   background: #fff;
   position: relative;
   z-index: 1;
+  scrollbar-width: none; /* Firefox: 스크롤은 되지만 스크롤바는 숨김 */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.app-frame::-webkit-scrollbar {
+  display: none; /* Chrome/Safari: 스크롤바 숨김 */
+}
+
+/* main 콘텐츠 영역도 같은 방식으로 스크롤바만 숨깁니다 */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* soft glow behind the framed app, sized relative to the frame */

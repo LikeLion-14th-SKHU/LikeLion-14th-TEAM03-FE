@@ -9,7 +9,7 @@ function ToggleRow({ label, enabled, onToggle, pending }) {
         aria-pressed={enabled}
         className={
           "relative w-11 h-6 rounded-full transition-colors disabled:opacity-60 " +
-          (enabled ? "bg-[#285E3C]" : "bg-[#D9D9D9]")
+          (enabled ? "bg-[#2A2A2A]" : "bg-[#D9D9D9]")
         }
       >
         <span
@@ -32,7 +32,7 @@ export default function NotificationToggle({
   skincarePending,
 }) {
   return (
-    <div className="bg-[#EFEFEF] rounded-2xl shadow-sm p-4">
+    <div className="bg-[#F8F8F8] rounded-2xl shadow-sm p-4">
       <span className="text-[14px] font-bold text-[#1f1f1f]">알림 설정</span>
       <div className="mt-1 divide-y divide-[#00000012]">
         <ToggleRow label="세안 알림" enabled={cleansingEnabled} onToggle={onToggleCleansing} pending={cleansingPending} />
