@@ -10,7 +10,7 @@ export default function ConcernInput({ onSubmit, pending, error }) {
   }
 
   return (
-    <div className="w-full bg-white rounded-2xl shadow-sm p-4 text-center flex flex-col items-center">
+    <div className="w-full bg-white rounded-2xl shadow-sm px-3 py-4 text-center flex flex-col items-center">
       <div className="text-[17px] font-bold text-[#1f1f1f]">
         <span className="text-[#BB3A2B]">새로운 고민</span>이 생겼나요?
       </div>
@@ -23,7 +23,7 @@ export default function ConcernInput({ onSubmit, pending, error }) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="요즘 피부 고민을 편하게 적어주세요"
-          className="w-full min-h-[72px] rounded-xl bg-[#ECECEC] px-4 py-3 text-[14px] text-[#1f1f1f] resize-none focus:outline-none"
+          className="w-full min-h-[140px] rounded-xl bg-[#ECECEC] px-4 py-3 text-[14px] text-[#1f1f1f] resize-none focus:outline-none"
         />
         <button
           type="button"
