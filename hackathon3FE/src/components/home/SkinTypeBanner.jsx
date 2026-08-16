@@ -4,7 +4,7 @@ import { skinTypeLabel } from "../../utils/skinType";
 export default function SkinTypeBanner({ nickname, baseType }) {
   return (
     <Link to="/skin-result" className="block bg-[#E2D9D0] rounded-2xl px-4 py-3">
-      <div className="text-[16px] font-extrabold text-[#1f1f1f] leading-snug">
+      <div className="text-[16px] font-bold text-[#1f1f1f] leading-snug">
         {nickname}님의 피부 타입은
         <br />
         {skinTypeLabel(baseType)}이에요

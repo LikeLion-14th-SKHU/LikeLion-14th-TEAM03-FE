@@ -9,25 +9,36 @@ export default function WeekStrip({ days }) {
         {today ? formatHeaderDate(new Date(today.date)) : ""}
       </div>
       <div className="flex justify-between">
-        {days.map((day) => (
-          <div key={day.date} className="flex flex-1 flex-col items-center gap-1">
-            <div
-              className={
-                "w-8 h-9 rounded-full flex items-center justify-center text-[13px] font-bold " +
-                (day.isPast
-                  ? "bg-[#285E3C] text-white"
-                  : day.isToday
-                  ? "bg-[#D9D9D9] text-[#1f1f1f]"
-                  : "text-[#1f1f1f]")
-              }
-            >
-              {day.day}
+        {days.map((day) => {
+          const highlighted = day.isPast || day.isToday;
+          return (
+            <div key={day.date} className="flex flex-1 flex-col items-center">
+              <div
+                className={
+                  "flex flex-col items-center justify-center rounded-full " +
+                  (highlighted
+                    ? "w-9 gap-1.5 py-2.5 " +
+                      (day.isPast
+                        ? "bg-[#285E3C] text-white"
+                        : "bg-[#D9D9D9] text-[#1f1f1f]")
+                    : "gap-1 py-1 text-[#1f1f1f]")
+                }
+              >
+                <span className="text-[15px] font-bold leading-none">
+                  {day.day}
+                </span>
+                <span
+                  className={
+                    "text-[12px] font-semibold leading-none " +
+                    (highlighted ? "" : "text-[#9a958c]")
+                  }
+                >
+                  {day.weekdayLabel}
+                </span>
+              </div>
             </div>
-            <div className="text-[12px] font-semibold text-[#9a958c]">
-              {day.weekdayLabel}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

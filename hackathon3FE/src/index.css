@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, "Apple SD Gothic Neo", system-ui, Roboto, sans-serif;
+}
+
 /* Minimal global styles only — component/layout styling is handled with Tailwind classes in components */
 html,
 body,
@@ -11,6 +16,8 @@ body,
 html,
 body {
   background-color: #ffffff;
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, "Apple SD Gothic Neo", system-ui, Roboto, sans-serif;
 }
 #root {
   height: 100%;
