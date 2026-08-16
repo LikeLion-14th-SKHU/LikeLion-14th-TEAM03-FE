@@ -4,34 +4,37 @@ export default function LoadingBar({
   value = 89,
   min = 0,
   max = 100,
-  height = 6,
+  height = 4,
   duration = 1200,
   className = "",
+  showPercent = true,
 }) {
   const safeValue = Math.min(Math.max(value, min), max);
-  const percent = Math.round((safeValue / (max - min)) * 100);
-  const [displayValue, setDisplayValue] = useState(0);
+  const [displayValue, setDisplayValue] = useState(safeValue);
 
   useEffect(() => {
-    let start = 0;
+    let frameId = 0;
+    const startValue = displayValue;
     const startTime = performance.now();
 
     const tick = (now) => {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      const nextValue = Math.round(((safeValue * eased) / (max - min)) * 100);
+      const nextValue = Math.round(
+        startValue + (safeValue - startValue) * eased,
+      );
       setDisplayValue(nextValue);
 
       if (progress < 1) {
-        start = requestAnimationFrame(tick);
+        frameId = requestAnimationFrame(tick);
       }
     };
 
-    start = requestAnimationFrame(tick);
+    frameId = requestAnimationFrame(tick);
 
-    return () => cancelAnimationFrame(start);
-  }, [safeValue, min, max, duration]);
+    return () => cancelAnimationFrame(frameId);
+  }, [safeValue, duration]);
 
   return (
     <div className={`w-full ${className}`}>
@@ -45,9 +48,11 @@ export default function LoadingBar({
         />
       </div>
 
-      <div className="mt-3 text-center text-[14px] font-medium text-[#6C6C6C]">
-        {Math.min(displayValue, 100)}%
-      </div>
+      {showPercent && (
+        <div className="mt-3 text-center text-[14px] font-medium text-[#6C6C6C]">
+          {Math.min(displayValue, 100)}%
+        </div>
+      )}
     </div>
   );
 }
