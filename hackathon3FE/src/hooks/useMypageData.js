@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { getOnboarding } from "../api/onboarding";
-import { getProgress } from "../api/todo";
+import { getMypage } from "../api/mypage";
+import { getOnboarding, updateGoalDate as updateGoalDateApi } from "../api/onboarding";
 import { toggleNotifications } from "../api/notifications";
 
-// ⚠️ 임시: 닉네임/피부타입/D-Day/투두 달성률은 실제 API 연동을 시도하고,
+// ⚠️ 닉네임/피부타입/목표 이름/D-Day 날짜/투두 달성률은 GET /api/mypage로 연동합니다.
 // 실패하면(세션/온보딩 없음, CORS 등) 목데이터로 화면을 채웁니다.
-// 피부 히스토리 목록과 D-Day 날짜 수정, 히스토리 추가, 세안/스킨케어 알림
-// 개별 설정은 아직 대응하는 백엔드 엔드포인트가 없어서 로컬 상태로만
-// 동작하며, 알림 토글은 기존 공용 PATCH /api/notifications/toggle을
-// best-effort로 호출합니다.
+// 알림 on/off는 백엔드에 세안/스킨케어 개별 토글이 없어(공용 PATCH /api/notifications/toggle
+// 하나뿐) 화면에서도 알림 설정을 하나로 합쳐서 보여줍니다(초기값은 GET /api/onboarding의 notiEnabled).
+// 피부 히스토리(과거 플랜 목록) 조회 엔드포인트는 아직 없어 로컬 상태로만 동작합니다.
 
 const MOCK_PROFILE = { name: "OO", baseType: "OILY", goalDate: "2026-09-04" };
 
@@ -21,39 +20,50 @@ const MOCK_PROGRESS = { cleansingRate: 0.82, skincareRate: 0.74 };
 
 export function useMypageData() {
   const [profile, setProfile] = useState(MOCK_PROFILE);
-  const [history, setHistory] = useState(MOCK_HISTORY);
+  const [history] = useState(MOCK_HISTORY);
   const [progress, setProgress] = useState(MOCK_PROGRESS);
-  const [cleansingNotiEnabled, setCleansingNotiEnabled] = useState(true);
-  const [skincareNotiEnabled, setSkincareNotiEnabled] = useState(true);
-  const [cleansingNotiPending, setCleansingNotiPending] = useState(false);
-  const [skincareNotiPending, setSkincareNotiPending] = useState(false);
+  const [notiEnabled, setNotiEnabled] = useState(true);
+  const [notiPending, setNotiPending] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
       try {
-        // GET /api/onboarding → { name, baseType, goalDate, notiEnabled, ... }
-        const real = await getOnboarding();
-        if (!cancelled && real) {
-          setProfile({ name: real.name, baseType: real.baseType, goalDate: real.goalDate });
-          if (typeof real.notiEnabled === "boolean") {
-            setCleansingNotiEnabled(real.notiEnabled);
-            setSkincareNotiEnabled(real.notiEnabled);
-          }
+        // GET /api/mypage → { myInfo, skinResult, todoStats, planResult }
+        const real = await getMypage();
+        if (cancelled || !real) return;
+
+        if (real.myInfo) {
+          setProfile({
+            name: real.myInfo.name,
+            baseType: real.myInfo.baseType,
+            goalDate: real.myInfo.goalDate,
+          });
+        }
+
+        if (real.todoStats) {
+          const { cleansingRate, skincareRate } = real.todoStats;
+          // 백엔드는 0~100 사이의 정수(퍼센트)로 내려주므로 기존 화면 로직(0~1 비율)에 맞춰 변환합니다.
+          setProgress({
+            cleansingRate: (cleansingRate || 0) / 100,
+            skincareRate: (skincareRate || 0) / 100,
+          });
         }
       } catch {
-        // 세션/온보딩이 없으면 목데이터를 유지합니다.
+        // 세션/온보딩이 없으면(예: ONBOARDING_NOT_FOUND) 목데이터를 유지합니다.
       }
     })();
 
     (async () => {
       try {
-        // GET /api/todo/progress → { cleansingRate, skincareRate, ... }
-        const real = await getProgress();
-        if (!cancelled && real) setProgress(real);
+        // GET /api/onboarding → notiEnabled(알림 on/off 초기값)만 참고합니다.
+        const real = await getOnboarding();
+        if (!cancelled && real && typeof real.notiEnabled === "boolean") {
+          setNotiEnabled(real.notiEnabled);
+        }
       } catch {
-        // 실패해도 목데이터를 유지합니다.
+        // 실패해도 기본값(true)을 유지합니다.
       }
     })();
 
@@ -62,33 +72,34 @@ export function useMypageData() {
     };
   }, []);
 
-  async function toggleCleansingNoti() {
-    setCleansingNotiEnabled((prev) => !prev);
-    setCleansingNotiPending(true);
+  async function toggleNoti() {
+    const next = !notiEnabled;
+    setNotiEnabled(next);
+    setNotiPending(true);
     try {
-      // PATCH /api/notifications/toggle (세안/스킨케어 구분 엔드포인트가 아직 없어 공용 API를 best-effort로 호출)
-      await toggleNotifications();
+      // PATCH /api/notifications/toggle → { notiEnabled, message }
+      const real = await toggleNotifications();
+      if (typeof real?.notiEnabled === "boolean") {
+        setNotiEnabled(real.notiEnabled);
+      }
     } catch {
-      // 실패해도 화면상 토글 상태는 그대로 둡니다.
+      // 실패하면 낙관적으로 바꾼 상태를 되돌립니다.
+      setNotiEnabled(!next);
     } finally {
-      setCleansingNotiPending(false);
+      setNotiPending(false);
     }
   }
 
-  async function toggleSkincareNoti() {
-    setSkincareNotiEnabled((prev) => !prev);
-    setSkincareNotiPending(true);
-    try {
-      await toggleNotifications();
-    } catch {
-    } finally {
-      setSkincareNotiPending(false);
-    }
-  }
-
-  function updateGoalDate(newDate) {
-    // ⚠️ 임시: D-Day 날짜 수정 API가 아직 없어서 로컬 상태만 업데이트합니다.
+  async function updateGoalDate(newDate) {
+    const prevDate = profile.goalDate;
     setProfile((prev) => ({ ...prev, goalDate: newDate }));
+    try {
+      // PATCH /api/onboarding/goal-date  body: { goalDate }
+      await updateGoalDateApi(newDate);
+    } catch {
+      // 실패하면(예: INVALID_GOAL_DATE) 이전 날짜로 되돌립니다.
+      setProfile((prev) => ({ ...prev, goalDate: prevDate }));
+    }
   }
 
   function addHistoryPlaceholder() {
@@ -99,12 +110,9 @@ export function useMypageData() {
     profile,
     history,
     progress,
-    cleansingNotiEnabled,
-    skincareNotiEnabled,
-    cleansingNotiPending,
-    skincareNotiPending,
-    toggleCleansingNoti,
-    toggleSkincareNoti,
+    notiEnabled,
+    notiPending,
+    toggleNoti,
     updateGoalDate,
     addHistoryPlaceholder,
   };

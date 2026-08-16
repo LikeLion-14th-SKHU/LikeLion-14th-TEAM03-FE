@@ -14,3 +14,10 @@ export async function restartOnboarding() {
   const res = await apiClient.post("/api/onboarding/restart");
   return unwrap(res);
 }
+
+// PATCH /api/onboarding/goal-date  body: { goalDate }
+// → { success: true } (에러 시 INVALID_GOAL_DATE 400)
+export async function updateGoalDate(goalDate) {
+  const res = await apiClient.patch("/api/onboarding/goal-date", { goalDate });
+  return unwrap(res);
+}

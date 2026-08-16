@@ -9,12 +9,9 @@ export default function Mypage() {
     profile,
     history,
     progress,
-    cleansingNotiEnabled,
-    skincareNotiEnabled,
-    cleansingNotiPending,
-    skincareNotiPending,
-    toggleCleansingNoti,
-    toggleSkincareNoti,
+    notiEnabled,
+    notiPending,
+    toggleNoti,
     updateGoalDate,
     addHistoryPlaceholder,
   } = useMypageData();
@@ -33,12 +30,9 @@ export default function Mypage() {
       <SkinHistorySection history={history} onAdd={addHistoryPlaceholder} />
 
       <NotificationToggle
-        cleansingEnabled={cleansingNotiEnabled}
-        skincareEnabled={skincareNotiEnabled}
-        onToggleCleansing={toggleCleansingNoti}
-        onToggleSkincare={toggleSkincareNoti}
-        cleansingPending={cleansingNotiPending}
-        skincarePending={skincareNotiPending}
+        enabled={notiEnabled}
+        onToggle={toggleNoti}
+        pending={notiPending}
       />
 
       <TodoProgressCard progress={progress} />
