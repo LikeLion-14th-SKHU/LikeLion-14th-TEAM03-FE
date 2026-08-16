@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/common/BackButton";
 import ConcernInput from "../components/home/ConcernInput";
 import ConcernResult from "../components/home/ConcernResult";
 import { addConcern } from "../api/cards";
@@ -44,13 +45,16 @@ export default function ConcernNew() {
   }
 
   return (
-    <section className="bg-[#E7E7E8] -mx-4 -my-6 px-5 py-6 flex flex-1 flex-col justify-center gap-3">
-      <ConcernInput onSubmit={handleSubmit} pending={pending} />
-      <ConcernResult
-        result={result}
-        onRecheck={handleRecheck}
-        recheckPending={recheckPending}
-      />
+    <section className="bg-[#E7E7E8] -mx-4 -my-6 px-5 py-6 flex flex-1 flex-col gap-3">
+      <BackButton />
+      <div className="flex flex-1 flex-col justify-center gap-3">
+        <ConcernInput onSubmit={handleSubmit} pending={pending} />
+        <ConcernResult
+          result={result}
+          onRecheck={handleRecheck}
+          recheckPending={recheckPending}
+        />
+      </div>
     </section>
   );
 }
