@@ -32,7 +32,7 @@ export default function Home() {
   const weekStrip = buildWeekStrip(new Date());
 
   return (
-    <section className="bg-[#E7E7E8] -mx-4 -my-6 px-5 pt-2.5 pb-4 flex flex-1 flex-col gap-3">
+    <section className="bg-[#E7E7E8] -mx-4 -my-6 px-5 pt-2.5 pb-4 flex flex-1 flex-col gap-4.5">
       <WeekStrip days={weekStrip} />
 
       <div className="flex gap-2.5">
