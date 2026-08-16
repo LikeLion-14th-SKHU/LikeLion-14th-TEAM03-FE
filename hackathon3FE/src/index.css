@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes profileIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.target-date-input::-webkit-calendar-picker-indicator {
+  margin-right: 11px;
+  cursor: pointer;
+}
+
 /* Minimal global styles only — component/layout styling is handled with Tailwind classes in components */
 html,
 body,
