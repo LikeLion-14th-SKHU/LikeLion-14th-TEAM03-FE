@@ -20,12 +20,21 @@ function AppShell() {
     location.pathname,
   );
 
+  const isResultPage = location.pathname === "/skin-result";
+
   return (
     <div className="app-outer min-h-screen flex items-center justify-center bg-gray-50 md:bg-gray-900">
-      <div className="app-frame flex h-[844px] w-full max-w-[420px] flex-col overflow-hidden rounded-[1rem] border border-white/5 bg-white text-gray-800 shadow-2xl">
+      <div
+        className="app-frame flex h-[844px] w-full max-w-[420px] flex-col overflow-hidden rounded-[1rem] border border-white/5 text-gray-800 shadow-2xl"
+        style={{ background: isResultPage ? "#eeeeee" : "white" }}
+      >
         {!isImmersive && <Header />}
 
-        <main className="flex min-h-0 flex-1 flex-col overflow-y-auto px-0 py-0">
+        <main
+          className={`flex min-h-0 flex-1 flex-col px-0 py-0 ${
+            isImmersive ? "overflow-hidden" : "overflow-y-auto"
+          }`}
+        >
           <Routes>
             <Route path="/" element={<Onboarding />} />
             <Route path="/home" element={<Home />} />

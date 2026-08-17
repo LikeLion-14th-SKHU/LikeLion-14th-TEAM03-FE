@@ -1,5 +1,7 @@
 import axios from "axios";
 
+axios.defaults.withCredentials = true;
+
 export const apiClient = axios.create({
   baseURL:
     import.meta.env.VITE_API_BASE_URL || "https://api.d-dayskincare.cloud/api",
@@ -15,6 +17,15 @@ export const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+apiClient.defaults.withCredentials = true;
+
+export function fetchWithCredentials(url, options = {}) {
+  return fetch(url, {
+    ...options,
+    credentials: "include",
+  });
+}
 
 export function unwrap(response) {
   if (!response) return undefined;

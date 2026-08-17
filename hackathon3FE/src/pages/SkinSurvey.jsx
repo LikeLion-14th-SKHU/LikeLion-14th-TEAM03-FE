@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getSkinResult } from "../api/skinResult";
 import { saveOnboarding } from "../api/onboarding";
 import miniLogo from "../assets/img/logo/MiniLogo.svg";
 import leaf from "../assets/img/icon/leaf.svg";
@@ -30,10 +31,44 @@ export default function SkinSurvey() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [concernText, setConcernText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const currentQuestion = skinSurveyQuestions[questionIndex];
 
   const selectAnswer = (optionId) => {
+    if (currentQuestion.id === "H1") {
+      const noneOptionId = "h1-6";
+
+      if (optionId === noneOptionId) {
+        const nextAnswers = {
+          ...answers,
+          [currentQuestion.id]: [noneOptionId],
+        };
+
+        setAnswers(nextAnswers);
+        persistOnboardingWeights(nextAnswers);
+        return;
+      }
+
+      const existingSelected = answers[currentQuestion.id] || [];
+      const filteredSelected = existingSelected.filter(
+        (id) => id !== noneOptionId,
+      );
+      const isAlreadySelected = filteredSelected.includes(optionId);
+      const nextSelected = isAlreadySelected
+        ? filteredSelected.filter((id) => id !== optionId)
+        : [...filteredSelected, optionId];
+
+      const nextAnswers = {
+        ...answers,
+        [currentQuestion.id]: nextSelected,
+      };
+
+      setAnswers(nextAnswers);
+      persistOnboardingWeights(nextAnswers);
+      return;
+    }
+
     const nextAnswers = {
       ...answers,
       [currentQuestion.id]: currentQuestion.multiple
@@ -77,6 +112,8 @@ export default function SkinSurvey() {
   };
 
   const handleSurveyComplete = async () => {
+    if (isSubmitting) return;
+
     const payload = buildOnboardingPayload({
       profile,
       purpose,
@@ -86,20 +123,43 @@ export default function SkinSurvey() {
     });
 
     persistOnboardingWeights(answers);
+    setIsSubmitting(true);
 
     try {
-      const backendResult = await saveOnboarding(payload);
-      console.log("onboarding saved", backendResult);
+      console.log("onboarding payload", payload);
+      const saved = await saveOnboarding(payload);
+      console.log("onboarding saved", saved);
+
+      const skinResult = await getSkinResult();
+      console.log("skin result fetched", skinResult);
+
+      if (!skinResult) {
+        window.alert(
+          "결과 생성이 아직 완료되지 않았습니다. 잠시 후 다시 시도해주세요.",
+        );
+        setStage("concern");
+        return;
+      }
+
+      navigate("/skin-result", {
+        replace: true,
+        state: {
+          answers,
+          payload,
+          onboarding: saved,
+          result: skinResult?.data ?? skinResult ?? null,
+        },
+      });
     } catch (error) {
       console.error("Failed to save onboarding", error);
+      console.error("status:", error.response?.status);
+      console.error("response:", error.response?.data);
+
+      window.alert("설문 저장에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    navigate("/skin-result", { state: { answers, payload } });
   };
-
-  if (stage === "loading") {
-    return <CompletionLoading onComplete={handleSurveyComplete} />;
-  }
 
   if (stage === "concern") {
     return (
@@ -136,8 +196,9 @@ export default function SkinSurvey() {
           </button>
           <button
             type="button"
-            onClick={() => setStage("loading")}
-            className="absolute top-0 h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white outline-none transition-all duration-300 hover:bg-[#204C31] active:scale-95"
+            onClick={handleSurveyComplete}
+            disabled={isSubmitting}
+            className="absolute top-0 h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white outline-none transition-all duration-300 hover:bg-[#204C31] active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
             style={{ right: "5%", color: "#FFFFFF" }}
           >
             완료
