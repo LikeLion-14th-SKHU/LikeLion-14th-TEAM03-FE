@@ -23,7 +23,6 @@
     "Apple SD Gothic Neo", system-ui, Roboto, sans-serif;
 }
 
-/* Minimal global styles only — component/layout styling is handled with Tailwind classes in components */
 html,
 body,
 #root {

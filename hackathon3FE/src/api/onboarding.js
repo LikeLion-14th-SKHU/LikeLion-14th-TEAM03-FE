@@ -1,19 +1,25 @@
 import { apiClient, unwrap } from "./client";
 
-// GET /api/onboarding
-// → { onboardingId, name, purpose, goalDate, age, gender, baseType,
-//     flags, safety, notiEnabled, dDay, createdAt }
 export async function saveOnboarding(payload) {
   const response = await apiClient.post("/onboarding", payload, {
     timeout: 60000,
   });
-
   return unwrap(response);
 }
 
-// POST /api/onboarding/restart → 재검사 시작 (성공하면 /onboarding으로 이동해서
-// POST /api/onboarding으로 새 설문을 다시 제출해야 함)
+export async function getOnboarding() {
+  const response = await apiClient.get("/onboarding");
+  return unwrap(response);
+}
+
+export async function updateGoalDate(goalDate) {
+  const response = await apiClient.patch("/onboarding/goal-date", {
+    goalDate,
+  });
+  return unwrap(response);
+}
+
 export async function restartOnboarding() {
-  const res = await apiClient.post("/onboarding/restart");
-  return unwrap(res);
+  const response = await apiClient.post("/onboarding/restart");
+  return unwrap(response);
 }
