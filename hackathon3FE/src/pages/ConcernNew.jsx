@@ -45,7 +45,7 @@ export default function ConcernNew() {
   }
 
   return (
-    <section className="bg-[#E7E7E8] -mx-4 -my-6 px-5 py-6 flex flex-1 flex-col gap-3">
+    <section className="bg-[#E7E7E8] px-5 py-6 flex flex-1 flex-col gap-3">
       <BackButton />
       <div className="flex flex-1 flex-col justify-center gap-3">
         <ConcernInput onSubmit={handleSubmit} pending={pending} />

@@ -2,7 +2,7 @@ function RateRow({ label, rate }) {
   const pct = Math.round((rate || 0) * 100);
   return (
     <div>
-      <div className="flex items-center justify-between text-[12.5px] font-semibold text-[#6f6c62]">
+      <div className="flex items-center justify-between text-[14px] font-semibold text-[#6f6c62]">
         <span>{label}</span>
         <span>{pct}%</span>
       </div>
@@ -21,7 +21,7 @@ export default function TodoProgressCard({ progress }) {
 
   return (
     <div className="bg-[#F8F8F8] rounded-2xl shadow-sm p-4">
-      <div className="text-[14px] font-bold text-[#1f1f1f]">투두 달성률</div>
+      <div className="text-[16px] text-[#1f1f1f]">투두 달성률</div>
       <div className="mt-3 flex flex-col gap-2.5">
         <RateRow label="세안" rate={cleansingRate} />
         <RateRow label="스킨 케어" rate={skincareRate} />

@@ -2,7 +2,7 @@ export default function NotificationToggle({ enabled, onToggle, pending }) {
   return (
     <div className="bg-[#F8F8F8] rounded-2xl shadow-sm p-4">
       <div className="flex items-center justify-between">
-        <span className="text-[14px] font-bold text-[#1f1f1f]">알림 설정</span>
+        <span className="text-[16px] text-[#1f1f1f]">알림 설정</span>
         <button
           type="button"
           onClick={onToggle}

@@ -9,16 +9,16 @@ export default function ConcernSection({ cards }) {
   return (
     <section className="pt-2.5 pb-2.5 border-t border-[#00000014]">
       {latestCard ? (
-        <div className="mb-3">
+        <div className="mb-4">
           <SolutionCard card={latestCard} />
         </div>
       ) : (
-        <div className="mb-3 text-center text-[13px] text-[#9a958c]">
+        <div className="mb-4 text-center text-[13px] text-[#9a958c]">
           아직 받은 솔루션 카드가 없어요.
         </div>
       )}
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         <Link
           to="/concern-input"
           className="block bg-[#1f1f1f] text-white text-center rounded-lg py-4 text-[15px] font-bold"

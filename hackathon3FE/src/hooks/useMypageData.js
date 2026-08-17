@@ -7,20 +7,17 @@ import { toggleNotifications } from "../api/notifications";
 // 실패하면(세션/온보딩 없음, CORS 등) 목데이터로 화면을 채웁니다.
 // 알림 on/off는 백엔드에 세안/스킨케어 개별 토글이 없어(공용 PATCH /api/notifications/toggle
 // 하나뿐) 화면에서도 알림 설정을 하나로 합쳐서 보여줍니다(초기값은 GET /api/onboarding의 notiEnabled).
-// 피부 히스토리(과거 플랜 목록) 조회 엔드포인트는 아직 없어 로컬 상태로만 동작합니다.
+// 피부 히스토리: 백엔드에 "과거 플랜 목록" API는 없고, GET /api/mypage의 planResult로
+// 가장 최근에 끝난 D-Day 플랜 1개만 받아올 수 있습니다. 그 1개만 실제 데이터로 보여주고,
+// planResult가 없으면(아직 끝난 플랜이 없으면) 빈 상태로 둡니다.
 
 const MOCK_PROFILE = { name: "OO", baseType: "OILY", goalDate: "2026-09-04" };
-
-const MOCK_HISTORY = [
-  { id: 1, range: "2026.08.10 ~ 2026.08.29", goal: "소개팅", totalDays: 19 },
-  { id: 2, range: "2026.09.04 ~ 2026.10.04", goal: "강릉 여행", totalDays: 30 },
-];
 
 const MOCK_PROGRESS = { cleansingRate: 0.82, skincareRate: 0.74 };
 
 export function useMypageData() {
   const [profile, setProfile] = useState(MOCK_PROFILE);
-  const [history] = useState(MOCK_HISTORY);
+  const [history, setHistory] = useState([]);
   const [progress, setProgress] = useState(MOCK_PROGRESS);
   const [notiEnabled, setNotiEnabled] = useState(true);
   const [notiPending, setNotiPending] = useState(false);
@@ -49,6 +46,27 @@ export function useMypageData() {
             cleansingRate: (cleansingRate || 0) / 100,
             skincareRate: (skincareRate || 0) / 100,
           });
+        }
+
+        // planResult는 D-Day 종료 전까지 null입니다. 있으면 종료된 히스토리 1개로 반영하고,
+        // 없으면(아직 안 끝났으면) 지금 진행 중인 플랜을 대신 보여줍니다.
+        if (real.planResult) {
+          setHistory([
+            {
+              id: real.planResult.createdAt,
+              completed: true,
+              ...real.planResult,
+            },
+          ]);
+        } else if (real.myInfo) {
+          setHistory([
+            {
+              id: "current",
+              completed: false,
+              purpose: real.myInfo.purpose,
+              goalDate: real.myInfo.goalDate,
+            },
+          ]);
         }
       } catch {
         // 세션/온보딩이 없으면(예: ONBOARDING_NOT_FOUND) 목데이터를 유지합니다.

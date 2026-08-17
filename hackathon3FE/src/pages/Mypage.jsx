@@ -17,8 +17,8 @@ export default function Mypage() {
   } = useMypageData();
 
   return (
-    <section className="bg-white -mx-4 -my-6 px-5 py-6 flex flex-col gap-3">
-      <h2 className="text-[18px] font-bold text-[#285E3C]">마이페이지</h2>
+    <section className="bg-white px-5 py-6 flex flex-col gap-3">
+      <h2 className="text-[20px] text-[#285E3C]">마이페이지</h2>
 
       <ProfileCard
         name={profile.name}

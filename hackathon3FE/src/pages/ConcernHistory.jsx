@@ -41,7 +41,7 @@ export default function ConcernHistory() {
   }, []);
 
   return (
-    <section className="bg-[#E7E7E8] -mx-4 -my-6 px-5 py-6 flex flex-1 flex-col gap-3">
+    <section className="bg-[#E7E7E8] px-5 py-6 flex flex-1 flex-col gap-3">
       <BackButton />
       <h2 className="text-[18px] font-bold text-[#1f1f1f]">지난 고민 솔루션</h2>
 
