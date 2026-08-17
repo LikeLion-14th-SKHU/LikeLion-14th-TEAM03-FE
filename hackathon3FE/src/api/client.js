@@ -2,7 +2,7 @@ import axios from "axios";
 
 // 세션은 UUID 쿠키(30일)로 관리되므로 withCredentials가 꼭 필요합니다.
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "https://d-dayskincare.cloud",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://api.d-dayskincare.cloud/api",
   withCredentials: true,
 });
 

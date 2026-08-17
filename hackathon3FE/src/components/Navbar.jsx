@@ -11,7 +11,7 @@ const navItems = [
 
 export default function Navbar() {
   return (
-    <nav className="sticky bottom-0 z-30 w-full shrink-0 bg-white pt-2">
+    <nav className="sticky bottom-0 z-30 w-full shrink-0 bg-[#eeeeee] pt-2">
       <div className="mx-auto flex h-[60px] w-full items-center justify-between bg-[#eeeeee] px-3 shadow-none">
         {navItems.map(({ to, label, iconSrc }) => (
           <NavLink
