@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useHomeData } from "../hooks/useHomeData";
 import { buildWeekStrip } from "../utils/date";
 import WeekStrip from "../components/home/WeekStrip";
@@ -7,6 +9,7 @@ import SkinTypeBanner from "../components/home/SkinTypeBanner";
 import ConcernSection from "../components/home/ConcernSection";
 
 export default function Home() {
+  const navigate = useNavigate();
   const {
     loading,
     error,
@@ -16,6 +19,13 @@ export default function Home() {
     todayChecks,
     toggleTodo,
   } = useHomeData();
+
+  // D-Day가 끝나면(0 이하) 자동으로 D-Day 종료 플로우로 이동시킵니다.
+  useEffect(() => {
+    if (typeof dday === "number" && dday <= 0) {
+      navigate("/d-dayend");
+    }
+  }, [dday, navigate]);
 
   if (loading) {
     return <p className="text-center text-[#4a4a46] py-10">불러오는 중...</p>;

@@ -1,8 +1,8 @@
 export default function DdayCard({ purpose, dday }) {
-  const isCounting = typeof dday === "number" && dday > 0;
+  const isCounting = typeof dday === "number" && dday >= 0;
   const text =
     dday === 0
-      ? "오늘이에요! 최선을 다해요"
+      ? "D-Day"
       : dday < 0
       ? "플랜이 종료됐어요"
       : `D-${dday}`;
