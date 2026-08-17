@@ -47,8 +47,14 @@ function ProfileForm({ onComplete }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // TODO: Swagger가 열리면 gender, age, nickname을 API로 전송합니다.
-    onComplete({ gender, age, nickname });
+
+    const trimmedNickname = nickname.trim();
+    if (!trimmedNickname) {
+      window.alert("닉네임을 입력해주세요.");
+      return;
+    }
+
+    onComplete({ gender, age, nickname: trimmedNickname });
   };
 
   return (
@@ -190,8 +196,25 @@ function GoalForm({ profile, onComplete }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // TODO: Swagger가 열리면 profile, purpose, targetDate를 API로 전송합니다.
-    onComplete({ ...profile, purpose, targetDate });
+
+    const trimmedPurpose = purpose.trim();
+    const trimmedTargetDate = targetDate.trim();
+
+    if (!trimmedPurpose) {
+      window.alert("목적을 입력해주세요.");
+      return;
+    }
+
+    if (!trimmedTargetDate) {
+      window.alert("목표 날짜를 입력해주세요.");
+      return;
+    }
+
+    onComplete({
+      ...profile,
+      purpose: trimmedPurpose,
+      targetDate: trimmedTargetDate,
+    });
   };
 
   const inputClassName =
@@ -317,7 +340,15 @@ export default function OnboardingStart() {
     return (
       <GoalForm
         profile={profile}
-        onComplete={() => setStep("loading")}
+        onComplete={(goalValues) => {
+          const nextProfile = {
+            ...profile,
+            ...goalValues,
+          };
+
+          setProfile(nextProfile);
+          setStep("loading");
+        }}
       />
     );
   }
@@ -326,7 +357,14 @@ export default function OnboardingStart() {
     return (
       <CompletionLoading
         onComplete={() =>
-          navigate("/skin-survey", { state: { nickname: profile?.nickname } })
+          navigate("/skin-survey", {
+            state: {
+              nickname: profile?.nickname,
+              profile,
+              purpose: profile?.purpose,
+              goalDate: profile?.targetDate,
+            },
+          })
         }
       />
     );

@@ -86,7 +86,20 @@ export default function SurveyQuestion({
         </button>
         <button
           type="button"
-          onClick={onNext}
+          onClick={() => {
+            const hasAnswer = Array.isArray(selectedOption)
+              ? selectedOption.length > 0
+              : selectedOption !== undefined &&
+                selectedOption !== null &&
+                selectedOption !== "";
+
+            if (!hasAnswer) {
+              window.alert("응답해주세요.");
+              return;
+            }
+
+            onNext();
+          }}
           className="absolute top-0 h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white outline-none transition-all duration-300 hover:bg-[#204C31] active:scale-95"
           style={{ color: "#FFFFFF", right: "5%" }}
         >
