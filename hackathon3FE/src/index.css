@@ -144,6 +144,16 @@ body {
   z-index: 5;
 }
 
+/* Hide the scrollbar track visually while keeping the content scrollable
+   (드래그/스크롤할 때 옆에 뜨는 스크롤바를 숨깁니다) */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE / Edge */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
 /* Mobile overrides: fill viewport, remove black margins and glow */
 @media (max-width: 767px) {
   .app-outer {
