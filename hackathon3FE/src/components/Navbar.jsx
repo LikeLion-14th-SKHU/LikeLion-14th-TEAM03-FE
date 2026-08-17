@@ -5,7 +5,7 @@ import userIcon from "../assets/img/navIcon/User.svg";
 
 const navItems = [
   { to: "/skin-result", label: "결과", iconSrc: archiveIcon },
-  { to: "/", label: "홈", iconSrc: homeIcon },
+  { to: "/home", label: "홈", iconSrc: homeIcon },
   { to: "/mypage", label: "마이페이지", iconSrc: userIcon },
 ];
 

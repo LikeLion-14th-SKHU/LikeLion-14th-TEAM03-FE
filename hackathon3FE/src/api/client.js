@@ -4,7 +4,10 @@ axios.defaults.withCredentials = true;
 
 export const apiClient = axios.create({
   baseURL:
-    import.meta.env.VITE_API_BASE_URL || "https://api.d-dayskincare.cloud/api",
+    import.meta.env.VITE_API_BASE_URL ||
+    (import.meta.env.MODE === "development"
+      ? "/api"
+      : "https://api.d-dayskincare.cloud/api"),
 
   timeout: 15000,
 
@@ -25,6 +28,13 @@ export function fetchWithCredentials(url, options = {}) {
     ...options,
     credentials: "include",
   });
+}
+export function errorMessage(error) {
+  return (
+    error?.response?.data?.message ||
+    error?.message ||
+    "요청 처리 중 오류가 발생했습니다."
+  );
 }
 
 export function unwrap(response) {

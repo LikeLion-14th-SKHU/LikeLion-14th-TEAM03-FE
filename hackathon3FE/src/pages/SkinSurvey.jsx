@@ -137,7 +137,8 @@ export default function SkinSurvey() {
         window.alert(
           "결과 생성이 아직 완료되지 않았습니다. 잠시 후 다시 시도해주세요.",
         );
-        setStage("concern");
+        // isSubmitting = true 상태 유지 (중복 호출 방지)
+        // 사용자가 다시 시도해야 하므로 버튼은 비활성화된 상태로 유지
         return;
       }
 
@@ -156,8 +157,12 @@ export default function SkinSurvey() {
       console.error("response:", error.response?.data);
 
       window.alert("설문 저장에 실패했습니다. 다시 시도해주세요.");
-    } finally {
-      setIsSubmitting(false);
+
+      // 3초 후 버튼 다시 활성화
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 3000);
+      return;
     }
   };
 

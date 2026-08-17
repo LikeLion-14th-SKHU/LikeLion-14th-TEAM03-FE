@@ -10,6 +10,8 @@ import Onboarding from "./pages/Onboarding";
 import SkinResult from "./pages/SkinResult";
 import DDayEnd from "./pages/DDayEnd";
 import Mypage from "./pages/Mypage";
+import ConcernNew from "./pages/ConcernNew";
+import ConcernHistory from "./pages/ConcernHistory";
 import NotFound from "./pages/NotFound";
 import SkinSurvey from "./pages/SkinSurvey";
 
@@ -31,7 +33,7 @@ function AppShell() {
         {!isImmersive && <Header />}
 
         <main
-          className={`flex min-h-0 flex-1 flex-col px-0 py-0 ${
+          className={`no-scrollbar flex min-h-0 flex-1 flex-col px-0 py-0 ${
             isImmersive ? "overflow-hidden" : "overflow-y-auto"
           }`}
         >
@@ -43,6 +45,8 @@ function AppShell() {
             <Route path="/skin-result" element={<SkinResult />} />
             <Route path="/d-dayend" element={<DDayEnd />} />
             <Route path="/mypage" element={<Mypage />} />
+            <Route path="/concern-input" element={<ConcernNew />} />
+            <Route path="/concern-history" element={<ConcernHistory />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
