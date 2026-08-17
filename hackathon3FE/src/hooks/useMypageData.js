@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMypage } from "../api/mypage";
+import { getMypage, getMypageHistory } from "../api/mypage";
 import { getOnboarding, updateGoalDate as updateGoalDateApi } from "../api/onboarding";
 import { toggleNotifications } from "../api/notifications";
 
@@ -7,9 +7,7 @@ import { toggleNotifications } from "../api/notifications";
 // 실패하면(세션/온보딩 없음, CORS 등) 목데이터로 화면을 채웁니다.
 // 알림 on/off는 백엔드에 세안/스킨케어 개별 토글이 없어(공용 PATCH /api/notifications/toggle
 // 하나뿐) 화면에서도 알림 설정을 하나로 합쳐서 보여줍니다(초기값은 GET /api/onboarding의 notiEnabled).
-// 피부 히스토리: 백엔드에 "과거 플랜 목록" API는 없고, GET /api/mypage의 planResult로
-// 가장 최근에 끝난 D-Day 플랜 1개만 받아올 수 있습니다. 그 1개만 실제 데이터로 보여주고,
-// planResult가 없으면(아직 끝난 플랜이 없으면) 빈 상태로 둡니다.
+// 피부 히스토리: GET /api/mypage/history로 진행중 + 종료된 플랜 전체를 최신순으로 받아옵니다.
 
 const MOCK_PROFILE = { name: "OO", baseType: "OILY", goalDate: "2026-09-04" };
 
@@ -48,28 +46,26 @@ export function useMypageData() {
           });
         }
 
-        // planResult는 D-Day 종료 전까지 null입니다. 있으면 종료된 히스토리 1개로 반영하고,
-        // 없으면(아직 안 끝났으면) 지금 진행 중인 플랜을 대신 보여줍니다.
-        if (real.planResult) {
-          setHistory([
-            {
-              id: real.planResult.createdAt,
-              completed: true,
-              ...real.planResult,
-            },
-          ]);
-        } else if (real.myInfo) {
-          setHistory([
-            {
-              id: "current",
-              completed: false,
-              purpose: real.myInfo.purpose,
-              goalDate: real.myInfo.goalDate,
-            },
-          ]);
-        }
       } catch {
         // 세션/온보딩이 없으면(예: ONBOARDING_NOT_FOUND) 목데이터를 유지합니다.
+      }
+    })();
+
+    (async () => {
+      try {
+        // GET /api/mypage/history → 진행중 + 종료된 플랜 전체(최신순)
+        const real = await getMypageHistory();
+        if (!cancelled && Array.isArray(real)) {
+          setHistory(
+            real.map((item) => ({
+              id: item.onboardingId,
+              completed: !item.isActive,
+              ...item,
+            })),
+          );
+        }
+      } catch {
+        // 세션/온보딩이 없으면 빈 히스토리를 유지합니다.
       }
     })();
 
