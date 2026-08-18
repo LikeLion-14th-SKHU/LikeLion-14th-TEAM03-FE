@@ -14,21 +14,24 @@ export function formatHeaderDate(date) {
 
 /**
  * 2일 전 ~ 4일 후, 총 7일짜리 주간 스트립.
- * 서버가 날짜별 완료 이력을 아직 안 주기 때문에, 지난 날짜는 일단 전부
- * "완료"로 보이게 표시합니다(백엔드에 일별 이력 API 생기면 isPast 대신
- * 실제 completed 값으로 바꾸면 됨).
+ * 서버에 날짜별 완료 이력 API가 없어서, checkHistory(이 브라우저 안에 날짜별로
+ * 쌓인 "그날 체크리스트를 다 했는지" 기록)에 있는 값만 그대로 반영합니다.
+ * 기록이 없는 날짜(과거든 미래든)는 전부 미완료(흰색)로 표시됩니다 — 즉 매일
+ * 체크할 때마다 그날 기록이 자동으로 쌓이는 구조예요.
  */
-export function buildWeekStrip(centerDate) {
+export function buildWeekStrip(centerDate, checkHistory = {}) {
   const days = [];
   for (let offset = -2; offset <= 4; offset++) {
     const d = new Date(centerDate);
     d.setDate(d.getDate() + offset);
+    const date = isoDate(d);
     days.push({
-      date: isoDate(d),
+      date,
       day: d.getDate(),
       weekdayLabel: WEEKDAY_LABELS[d.getDay()],
       isToday: offset === 0,
       isPast: offset < 0,
+      isChecked: !!checkHistory[date],
     });
   }
   return days;

@@ -36,6 +36,34 @@ function saveTodayChecksLocal(checks) {
   }
 }
 
+// ⚠️ 백엔드에 "날짜별로 체크리스트를 완료했는지" 조회하는 API가 없어서,
+// 체크할 때마다 그날 날짜에 완료 여부를 이 브라우저 안에 같이 남겨둡니다.
+// 매일매일 체크할 때마다 자동으로 쌓이는 구조라, 오늘 이후로 실제 기록이
+// 점점 정확해집니다(단, 이 기기/브라우저 밖에서 체크한 기록은 알 수 없어요).
+const CHECK_HISTORY_STORAGE_KEY = "oddeune:checkHistory";
+
+function loadCheckHistory() {
+  try {
+    const raw = window.localStorage.getItem(CHECK_HISTORY_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveCheckHistoryLocal(history) {
+  try {
+    window.localStorage.setItem(
+      CHECK_HISTORY_STORAGE_KEY,
+      JSON.stringify(history),
+    );
+  } catch {
+    // localStorage를 쓸 수 없는 환경이면 조용히 무시합니다.
+  }
+}
+
 // 온보딩(이름/목적/D-Day/피부타입)은 실제 GET /api/onboarding을 먼저 시도하고,
 // 세션/온보딩이 없거나 요청이 실패하면 목데이터로 화면이 계속 정상 동작하도록
 // 낙관적 패턴을 그대로 따릅니다(카드 목록 로드와 동일한 방식).
@@ -73,6 +101,7 @@ export function useHomeData() {
   const [todayChecks, setTodayChecks] = useState(
     () => loadTodayChecks() || { cleansingDone: false, skincareDone: false },
   );
+  const [checkHistory, setCheckHistory] = useState(() => loadCheckHistory());
   const [concernPending, setConcernPending] = useState(false);
   const [todoSaveError, setTodoSaveError] = useState(null);
 
@@ -125,6 +154,15 @@ export function useHomeData() {
     saveTodayChecksLocal(next);
     setTodoSaveError(null);
 
+    // 오늘 날짜에 완료 여부를 기록해둡니다(매일 체크할 때마다 그날 기록이 쌓여요).
+    const todayIso = isoDate(new Date());
+    const nextHistory = {
+      ...checkHistory,
+      [todayIso]: next.cleansingDone && next.skincareDone,
+    };
+    setCheckHistory(nextHistory);
+    saveCheckHistoryLocal(nextHistory);
+
     try {
       await saveTodoCheck(next);
     } catch (err) {
@@ -156,6 +194,7 @@ export function useHomeData() {
     dday,
     cards,
     todayChecks,
+    checkHistory,
     toggleTodo,
     submitConcern,
     concernPending,

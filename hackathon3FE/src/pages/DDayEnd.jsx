@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EndOverlay from "../components/ddayend/EndOverlay";
+import WeekStrip from "../components/home/WeekStrip";
+import DdayCard from "../components/home/DdayCard";
 import QuestionStep from "../components/ddayend/QuestionStep";
 import DiagnosisStep from "../components/ddayend/DiagnosisStep";
 import LoadingStep from "../components/ddayend/LoadingStep";
 import ResultSummary from "../components/ddayend/ResultSummary";
 import { getOnboarding } from "../api/onboarding";
-import { finishPlan } from "../api/plan";
+import { getBeforeScore, finishPlan } from "../api/plan";
 import { getProgress } from "../api/todo";
+import { buildWeekStrip } from "../utils/date";
 
-// ⚠️ 2026.08 기준으로 확인한 내용: 온보딩/피부결과/투두 어느 응답에도 항목별
-// (피지량/댕김/여드름/붉은기) "before 점수"가 아직 내려오지 않습니다. 실제 응답을
-// 재귀적으로 다 뒤져봤지만 숫자 필드 자체가 없어요. 그래서 슬라이더에서 평가할 항목과
-// 시작 점수는 백엔드에 필드가 추가되기 전까지 아래 값으로 임시 고정합니다.
-// TODO: 백엔드에 항목별 before 점수 필드 추가되면 이 두 값을 실제 값으로 교체하세요.
+// GET /api/plan/before-score가 실패했을 때만 쓰는 안전장치입니다.
+// (온보딩 때 계산된 trouble_scores 중 MAX 항목을 백엔드가 대신 골라주므로
+// 평소에는 이 값이 쓰일 일이 없습니다.)
 const FALLBACK_SCORE_KEY = "피지량";
 const FALLBACK_BEFORE_SCORE = 5;
 
@@ -34,6 +35,8 @@ export default function DDayEnd() {
     skincareRate: 0,
     totalRate: 0,
   });
+  const [scoreKey, setScoreKey] = useState(FALLBACK_SCORE_KEY);
+  const [beforeScore, setBeforeScore] = useState(FALLBACK_BEFORE_SCORE);
   const [result, setResult] = useState(null);
 
   // 이번 여정 요약(목적/총 기간)과 체크리스트 진행률은 실제 데이터로 미리 받아둡니다.
@@ -67,6 +70,21 @@ export default function DDayEnd() {
       }
     })();
 
+    // 슬라이더에 쓸 평가 항목(scoreKey)과 초기값(beforeScore)은
+    // GET /api/plan/before-score가 온보딩 trouble_scores 중 MAX 항목으로 대신 골라줍니다.
+    (async () => {
+      try {
+        const beforeScoreData = await getBeforeScore();
+        if (cancelled || !beforeScoreData) return;
+        const { afterScoreKey, beforeScoreValue } = beforeScoreData;
+        if (!afterScoreKey || typeof beforeScoreValue !== "number") return;
+        setScoreKey(afterScoreKey);
+        setBeforeScore(beforeScoreValue);
+      } catch {
+        // 실패해도 fallback(피지량/5)으로 유지합니다.
+      }
+    })();
+
     return () => {
       cancelled = true;
     };
@@ -84,15 +102,12 @@ export default function DDayEnd() {
     setStep("loading");
     try {
       // POST /api/plan/finish → AI가 리포트를 생성해서 바로 돌려줍니다.
-      const real = await finishPlan({
-        afterScoreKey: FALLBACK_SCORE_KEY,
-        afterScoreValue,
-      });
+      const real = await finishPlan({ afterScoreKey: scoreKey, afterScoreValue });
       setResult(real);
     } catch {
       // 리포트 생성 실패 시에도 화면이 멈추지 않도록 최소한의 결과로 채웁니다.
       setResult({
-        afterScoreKey: FALLBACK_SCORE_KEY,
+        afterScoreKey: scoreKey,
         afterScoreValue,
         journeySummary: "",
         improvementPoints: "",
@@ -112,10 +127,23 @@ export default function DDayEnd() {
     navigate("/");
   }
 
+  // /d-dayend는 실제 D-Day가 0이 안 됐어도(테스트 시 서버 시간을 건너뛸 수 없으니)
+  // 주소를 직접 쳐서 들어와도 항상 볼 수 있어야 해서, 홈 화면에 기대야 하는 대신
+  // 이 페이지 자체에서 캘린더/D-Day 카드를 다시 그려서 오버레이 뒤에 보여줍니다.
+  const weekStrip = buildWeekStrip(new Date());
+
   return (
     <div className="relative flex min-h-full flex-1 flex-col">
       {step === "overlay" && (
-        <EndOverlay onConfirm={() => setStep("question")} />
+        <div className="relative flex min-h-full flex-1 flex-col gap-4 bg-[#E7E7E8] px-5 pt-4 pb-4">
+          <WeekStrip days={weekStrip} />
+
+          <div className="flex gap-2.5">
+            <DdayCard purpose={purpose} dday={0} />
+          </div>
+
+          <EndOverlay onConfirm={() => setStep("question")} />
+        </div>
       )}
 
       {step === "question" && (
@@ -124,21 +152,21 @@ export default function DDayEnd() {
 
       {step === "diagnosis" && (
         <DiagnosisStep
-          scoreKey={FALLBACK_SCORE_KEY}
-          beforeScore={FALLBACK_BEFORE_SCORE}
+          scoreKey={scoreKey}
+          beforeScore={beforeScore}
           onSubmit={handleDiagnosisSubmit}
         />
       )}
 
-      {step === "loading" && <LoadingStep />}
+      {step === "loading" && <LoadingStep isReady={!!result} />}
 
       {step === "result" && result && (
         <ResultSummary
           journey={{
             purpose,
             totalDays,
-            scoreKey: result.afterScoreKey || FALLBACK_SCORE_KEY,
-            beforeScore: FALLBACK_BEFORE_SCORE,
+            scoreKey: result.afterScoreKey,
+            beforeScore,
             afterScore: result.afterScoreValue,
             todoStats,
             improvementPoints: result.improvementPoints,

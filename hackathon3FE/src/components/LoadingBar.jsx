@@ -10,7 +10,8 @@ export default function LoadingBar({
   showPercent = true,
 }) {
   const safeValue = Math.min(Math.max(value, min), max);
-  const [displayValue, setDisplayValue] = useState(safeValue);
+  // 처음 뜰 때는 항상 0%부터 시작해서 목표값까지 차오르게 합니다.
+  const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
     let frameId = 0;
