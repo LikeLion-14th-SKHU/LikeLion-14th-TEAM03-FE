@@ -5,13 +5,13 @@ import userIcon from "../assets/img/navIcon/User.svg";
 
 const navItems = [
   { to: "/skin-result", label: "결과", iconSrc: archiveIcon },
-  { to: "/", label: "홈", iconSrc: homeIcon },
+  { to: "/home", label: "홈", iconSrc: homeIcon },
   { to: "/mypage", label: "마이페이지", iconSrc: userIcon },
 ];
 
 export default function Navbar() {
   return (
-    <nav className="sticky bottom-0 z-30 w-full shrink-0 bg-white pt-2">
+    <nav className="sticky bottom-0 z-30 w-full shrink-0 bg-[#eeeeee] pt-2">
       <div className="mx-auto flex h-[60px] w-full items-center justify-between bg-[#eeeeee] px-3 shadow-none">
         {navItems.map(({ to, label, iconSrc }) => (
           <NavLink

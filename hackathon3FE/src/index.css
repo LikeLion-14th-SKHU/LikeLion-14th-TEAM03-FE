@@ -1,8 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Minimal global styles only — component/layout styling is handled with Tailwind classes in components */
+@theme {
+  --font-sans:
+    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", system-ui, Roboto, sans-serif;
+}
+
+@keyframes profileIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.target-date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
 html,
 body,
 #root {
@@ -10,11 +28,19 @@ body,
   margin: 0;
   overflow: hidden;
 }
-@tailwind utilities;
 
 html,
 body {
   background-color: #ffffff;
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    system-ui,
+    Roboto,
+    sans-serif;
 }
 #root {
   height: 100%;
@@ -22,6 +48,36 @@ body {
 
 body {
   overscroll-behavior: none;
+}
+
+.result-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  scrollbar-gutter: stable;
+}
+
+.result-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.result-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.result-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+.result-scroll:hover::-webkit-scrollbar-thumb,
+.result-scroll:active::-webkit-scrollbar-thumb,
+.result-scroll:focus-within::-webkit-scrollbar-thumb {
+  background: rgba(42, 42, 42, 0.28);
+}
+
+.result-scroll:hover {
+  scrollbar-color: rgba(42, 42, 42, 0.28) transparent;
 }
 
 /* Always show framed app; frame scales to fit small viewports while preserving aspect ratio */
@@ -32,7 +88,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
   min-height: 100vh;
 }
 
@@ -52,6 +107,20 @@ body {
   background: #fff;
   position: relative;
   z-index: 1;
+  scrollbar-width: none; /* Firefox: 스크롤은 되지만 스크롤바는 숨김 */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.app-frame::-webkit-scrollbar {
+  display: none; /* Chrome/Safari: 스크롤바 숨김 */
+}
+
+/* main 콘텐츠 영역도 같은 방식으로 스크롤바만 숨깁니다 */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* soft glow behind the framed app, sized relative to the frame */
@@ -72,6 +141,16 @@ body {
   filter: blur(30px);
   pointer-events: none;
   z-index: 5;
+}
+
+/* Hide the scrollbar track visually while keeping the content scrollable
+   (드래그/스크롤할 때 옆에 뜨는 스크롤바를 숨깁니다) */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE / Edge */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
 /* Mobile overrides: fill viewport, remove black margins and glow */
