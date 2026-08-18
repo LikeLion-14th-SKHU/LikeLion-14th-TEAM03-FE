@@ -168,7 +168,7 @@ export default function SkinSurvey() {
 
   if (stage === "concern") {
     return (
-      <section className="relative -mx-4 -my-6 flex flex-1 animate-[profileIn_500ms_ease-out_both] flex-col bg-white px-6 pb-8 pt-5">
+      <section className="relative flex flex-1 animate-[profileIn_500ms_ease-out_both] flex-col bg-white px-6 pb-8 pt-5">
         <img src={miniLogo} alt="오뷰" className="h-7 w-auto self-start" />
 
         <div className="flex flex-1 flex-col justify-center">
@@ -214,7 +214,7 @@ export default function SkinSurvey() {
   }
 
   return (
-    <section className="relative -mx-4 -my-6 flex flex-1 animate-[profileIn_500ms_ease-out_both] flex-col bg-white px-6 pb-8 pt-5">
+    <section className="relative flex flex-1 animate-[profileIn_500ms_ease-out_both] flex-col bg-white px-6 pb-8 pt-5">
       <img src={miniLogo} alt="오뷰" className="h-7 w-auto self-start" />
 
       {stage === "survey" ? (
@@ -238,7 +238,7 @@ export default function SkinSurvey() {
               src={leaf}
               alt=""
               aria-hidden="true"
-              className="absolute left-2/5 top-[-38px] h-8 w-12 -translate-x-1/2 object-contain"
+              className="absolute left-2/5 top-[-30px] h-12 w-18 -translate-x-1/2 object-contain"
               style={{
                 filter:
                   "brightness(0) saturate(100%) invert(31%) sepia(18%) saturate(1375%) hue-rotate(93deg) brightness(90%) contrast(91%)",

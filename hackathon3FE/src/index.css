@@ -18,7 +18,6 @@
 }
 
 .target-date-input::-webkit-calendar-picker-indicator {
-  margin-right: 11px;
   cursor: pointer;
 }
 

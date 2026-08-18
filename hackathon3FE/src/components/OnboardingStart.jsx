@@ -107,7 +107,7 @@ function ProfileForm({ onComplete }) {
             aria-label="성별 선택"
           >
             <span
-              className={`absolute bottom-1 top-1 w-[calc(50%-4px)] rounded-lg bg-[#DCE8E0] shadow-[inset_0_0_0_1px_rgba(40,94,60,0.12)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${gender === "female" ? "translate-x-full" : "translate-x-0"}`}
+              className={`absolute  w-[calc(50%)] rounded-lg bg-[#DCE8E0] shadow-[inset_0_0_0_1px_rgba(40,94,60,0.12)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${gender === "female" ? "translate-x-full" : "translate-x-0"}`}
             />
             {[
               ["male", "남"],
@@ -140,12 +140,12 @@ function ProfileForm({ onComplete }) {
             >
               {age}
             </output>
-            <div className="mr-1 flex h-[40px] w-11 flex-col overflow-hidden rounded-[5px] bg-white/70">
+            <div className="  flex h-[40px] w-11 flex-col overflow-hidden rounded-[5px] bg-white/70">
               <button
                 type="button"
                 onClick={() => changeAge(1)}
                 aria-label="나이 올리기"
-                className="flex flex-1 items-center justify-center border-none text-[10px] text-[#285E3C] outline-none transition-colors hover:bg-white active:bg-[#D5E4DA] focus:outline-none"
+                className="flex flex-1 items-center justify-center  text-[10px] text-[#285E3C] outline-none transition-colors hover:bg-white active:bg-[#D5E4DA] focus:outline-none"
               >
                 ▲
               </button>
@@ -276,7 +276,7 @@ function GoalForm({ profile, onComplete }) {
             htmlFor="targetDate"
             className="w-[110px] shrink-0 text-right text-[20px] font-semibold text-[#2a2a2a]"
           >
-            목표날짜:
+            목표 날짜:
           </label>
           <input
             id="targetDate"
