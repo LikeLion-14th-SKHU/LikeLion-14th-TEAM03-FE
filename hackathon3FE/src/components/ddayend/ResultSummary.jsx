@@ -1,3 +1,24 @@
+// 백엔드가 improvementPoints/recommendationNext를 배열로 내려줄 때도,
+// 그 배열을 JSON 문자열 그대로("["...", "..."]") 내려줄 때도 있어서
+// 두 경우 모두 대괄호/따옴표 없이 문장 목록으로 정리합니다.
+function toTextList(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed.filter(Boolean);
+      } catch {
+        // JSON 배열 형태가 아니면 원본 문자열을 그대로 씁니다.
+      }
+    }
+    return [trimmed];
+  }
+  return [String(value)];
+}
+
 function ProgressRow({ label, rate }) {
   return (
     <div className="flex items-center gap-3">
@@ -40,6 +61,9 @@ export default function ResultSummary({ journey, onRestart, onFinish }) {
       ? "조금 더 관리가 필요해 보여요"
       : "큰 변화 없이 유지됐어요";
 
+  const improvementList = toTextList(improvementPoints);
+  const recommendationList = toTextList(recommendationNext);
+
   return (
     <div className="flex min-h-full flex-col px-4 pb-2">
       <div className="text-[32px]">🎉</div>
@@ -77,14 +101,22 @@ export default function ResultSummary({ journey, onRestart, onFinish }) {
       <div className="mt-5 grid grid-cols-2 gap-3">
         <div className="rounded-2xl bg-[#EEEEEE] p-4">
           <div className="text-[17px] text-[#6C6C6C]">잘한 점</div>
-          <div className="mt-1.5 text-[13px]  leading-snug text-[#000000]">
-            {improvementPoints || "아직 리포트를 준비 중이에요"}
+          <div className="mt-1.5 flex flex-col gap-1.5 text-[13px]  leading-snug text-[#000000]">
+            {improvementList.length > 0 ? (
+              improvementList.map((text, index) => <p key={index}>{text}</p>)
+            ) : (
+              <p>아직 리포트를 준비 중이에요</p>
+            )}
           </div>
         </div>
         <div className="rounded-2xl bg-[#EEEEEE] p-4">
           <div className="text-[17px] text-[#6C6C6C]">앞으로 추천</div>
-          <div className="mt-1.5 text-[13px]  leading-snug text-[#000000]">
-            {recommendationNext || "아직 리포트를 준비 중이에요"}
+          <div className="mt-1.5 flex flex-col gap-1.5 text-[13px]  leading-snug text-[#000000]">
+            {recommendationList.length > 0 ? (
+              recommendationList.map((text, index) => <p key={index}>{text}</p>)
+            ) : (
+              <p>아직 리포트를 준비 중이에요</p>
+            )}
           </div>
         </div>
       </div>

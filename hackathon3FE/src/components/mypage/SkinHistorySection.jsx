@@ -18,12 +18,45 @@ function totalDays(startIso, endIso) {
   return Math.round((end - start) / 86400000);
 }
 
+// 백엔드가 리스트형 필드(개선 포인트 등)를 배열로 줄 때도, 그 배열을 JSON
+// 문자열 그대로("["...", "..."]") 줄 때도 있어서 두 경우 모두 대괄호/따옴표
+// 없이 문장 목록으로 정리합니다.
+function toTextList(value) {
+  if (!value && value !== 0) return [];
+  if (Array.isArray(value)) return value.filter((v) => v || v === 0);
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed.filter(Boolean);
+      } catch {
+        // JSON 배열 형태가 아니면 원본 문자열을 그대로 씁니다.
+      }
+    }
+    return [trimmed];
+  }
+  return [String(value)];
+}
+
 function HistoryDetailRow({ label, value }) {
-  if (!value && value !== 0) return null;
+  const items = toTextList(value);
+  if (items.length === 0) return null;
   return (
-    <div className="text-[15px] font-medium text-[#2A2A2A]">
-      <span className="text-[#2A2A2A]">{label}: </span>
-      {value}
+    <div className="flex flex-col gap-1.5 py-3 first:pt-0 last:pb-0">
+      <span className="text-[15px] font-bold tracking-tight text-[#285E3C]">
+        {label}
+      </span>
+      <div className="flex flex-col gap-1.5">
+        {items.map((text, index) => (
+          <p
+            key={index}
+            className="text-[14px] font-normal leading-relaxed text-[#4a4a46]"
+          >
+            {text}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
@@ -85,7 +118,7 @@ export default function SkinHistorySection({ history, onAdd }) {
                   </div>
 
                   {openItemId === item.id && (
-                    <div className="mt-2.5 flex flex-col gap-1 border-t border-[#00000014] pt-2.5">
+                    <div className="mt-3 divide-y divide-[#e5e2dc] rounded-xl bg-white px-3.5 py-2 shadow-sm">
                       <HistoryDetailRow
                         label="피부타입"
                         value={item.baseType ? skinTypeLabel(item.baseType) : null}

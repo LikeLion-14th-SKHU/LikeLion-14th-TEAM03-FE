@@ -17,6 +17,7 @@ export default function Home() {
     dday,
     cards,
     todayChecks,
+    checkHistory,
     toggleTodo,
   } = useHomeData();
 
@@ -39,7 +40,8 @@ export default function Home() {
     );
   }
 
-  const weekStrip = buildWeekStrip(new Date());
+  // 각 날짜 칸은 그날 실제로 체크리스트를 다 했는지(checkHistory)를 그대로 보여줍니다.
+  const weekStrip = buildWeekStrip(new Date(), checkHistory);
 
   return (
     <section className="bg-[#E7E7E8] px-5 pt-4 pb-4 flex flex-1 flex-col gap-4">

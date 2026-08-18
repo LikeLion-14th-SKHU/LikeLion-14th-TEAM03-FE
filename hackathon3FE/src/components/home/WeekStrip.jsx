@@ -10,18 +10,18 @@ export default function WeekStrip({ days }) {
       </div>
       <div className="flex justify-between">
         {days.map((day) => {
-          const highlighted = day.isPast || day.isToday;
+          const checked = day.isChecked;
+          const isUpcoming = !day.isPast && !day.isToday;
           return (
             <div key={day.date} className="flex flex-1 flex-col items-center">
               <div
                 className={
-                  "flex flex-col items-center justify-center rounded-full " +
-                  (highlighted
-                    ? "w-9 gap-1.5 py-2.5 " +
-                      (day.isPast
-                        ? "bg-[#285E3C] text-white"
-                        : "bg-[#D9D9D9] text-[#1f1f1f]")
-                    : "gap-1 py-1 text-[#1f1f1f]")
+                  "flex w-9 flex-col items-center justify-center gap-1.5 rounded-full py-2.5 " +
+                  (checked
+                    ? "bg-[#285E3C] text-white"
+                    : isUpcoming
+                    ? "bg-white text-[#1f1f1f]"
+                    : "bg-[#D9D9D9] text-[#1f1f1f]")
                 }
               >
                 <span className="text-[15px] font-bold leading-none">
@@ -30,7 +30,7 @@ export default function WeekStrip({ days }) {
                 <span
                   className={
                     "text-[12px] font-semibold leading-none " +
-                    (highlighted ? "" : "text-[#9a958c]")
+                    (checked ? "" : "text-[#9a958c]")
                   }
                 >
                   {day.weekdayLabel}

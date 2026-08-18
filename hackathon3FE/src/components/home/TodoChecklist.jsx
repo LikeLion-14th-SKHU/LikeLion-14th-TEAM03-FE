@@ -14,7 +14,7 @@ export default function TodoChecklist({ todayChecks, onToggle }) {
           type="button"
           key={todo.id}
           onClick={() => onToggle(todo.id)}
-          className="flex-1 bg-white rounded-xl shadow-sm px-3 py-2 flex flex-col items-center justify-between text-center gap-1"
+          className="group flex-1 cursor-pointer bg-white rounded-xl shadow-sm px-3 py-2 flex flex-col items-center justify-between text-center gap-1"
         >
           <span className="text-[14px] font-bold text-[#1f1f1f]">{todo.label}</span>
           <img
@@ -22,6 +22,7 @@ export default function TodoChecklist({ todayChecks, onToggle }) {
             alt={todo.checked ? "체크됨" : "체크 안 됨"}
             width="26"
             height="26"
+            className="transition-transform duration-150 ease-out group-hover:scale-110 group-active:scale-90"
           />
         </button>
       ))}
