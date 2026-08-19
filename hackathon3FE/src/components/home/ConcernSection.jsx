@@ -21,15 +21,18 @@ export default function ConcernSection({ cards }) {
       <div className="flex flex-col gap-3">
         <Link
           to="/concern-input"
-          className="block bg-[#1f1f1f] text-white text-center rounded-lg py-4 text-[15px] font-bold"
+          className="flex items-center justify-center gap-2 bg-[#1f1f1f] text-white rounded-xl py-3 text-[15px] font-bold"
         >
+          <span aria-hidden="true">✏️</span>
           고민 입력하기
         </Link>
         <Link
           to="/concern-history"
-          className="block bg-white shadow-sm text-center rounded-lg py-4 text-[15px] font-bold text-[#1f1f1f]"
+          className="relative flex items-center justify-center gap-2 rounded-xl border border-[#E2E2E2] bg-white py-3 text-[15px] font-bold text-[#1f1f1f] shadow-sm"
         >
+          <span aria-hidden="true">📋</span>
           지난 고민 솔루션 보기
+          <span className="absolute right-4 text-[#9a958c]">›</span>
         </Link>
       </div>
     </section>

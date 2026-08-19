@@ -136,11 +136,11 @@ export default function DDayEnd() {
     <div className="relative flex min-h-full flex-1 flex-col">
       {step === "overlay" && (
         <div className="relative flex min-h-full flex-1 flex-col gap-4 bg-[#E7E7E8] px-5 pt-4 pb-4">
-          <WeekStrip days={weekStrip} />
-
-          <div className="flex gap-2.5">
-            <DdayCard purpose={purpose} dday={0} />
+          <div className="rounded-2xl bg-white px-4 py-3 shadow-sm">
+            <WeekStrip days={weekStrip} />
           </div>
+
+          <DdayCard purpose={purpose} dday={0} totalDays={totalDays} />
 
           <EndOverlay onConfirm={() => setStep("question")} />
         </div>

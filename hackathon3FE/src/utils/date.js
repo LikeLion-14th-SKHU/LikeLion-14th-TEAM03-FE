@@ -12,6 +12,15 @@ export function formatHeaderDate(date) {
   return `${pad(date.getMonth() + 1)}월 ${pad(date.getDate())}일`;
 }
 
+// startIso ~ endIso 사이 일수(음수/NaN이면 0). 시작일~목표일 사이 총 기간이나
+// 시작일~오늘 사이 경과일을 구할 때 씁니다.
+export function daysBetween(startIso, endIso) {
+  const start = new Date(startIso);
+  const end = new Date(endIso);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 0;
+  return Math.max(Math.round((end - start) / 86400000), 0);
+}
+
 /**
  * 2일 전 ~ 4일 후, 총 7일짜리 주간 스트립.
  * 서버에 날짜별 완료 이력 API가 없어서, checkHistory(이 브라우저 안에 날짜별로

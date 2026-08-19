@@ -8,18 +8,20 @@ export default function DdayCard({ purpose, dday }) {
       : `D-${dday}`;
 
   return (
-    <div className="flex-[1.35] bg-white rounded-xl shadow-sm p-4 flex flex-col overflow-hidden">
-      <div className="text-[15px]  text-[#1f1f1f]">{purpose} 까지</div>
-      <div className="flex-1 flex items-center justify-center">
-        <div
-          className={
-            "w-full text-center  text-[#285E3C] tracking-tight whitespace-nowrap " +
-            (isCounting ? "text-[67px] leading-none" : "text-[16px] leading-snug")
-          }
-        >
-          {text}
-        </div>
+    <div className="w-full rounded-2xl bg-[#285E3C] px-5 pt-3.5 pb-5 text-white">
+      <div className="text-[14px] font-semibold text-white/85">
+        {purpose} 까지
       </div>
+
+      <div className="mt-1.5 text-center text-[64px] font-black leading-none tracking-tight">
+        {text}
+      </div>
+
+      {isCounting && dday > 0 && (
+        <div className="mt-2 text-center text-[13px] font-medium text-white/80">
+          📅 {dday}일 후, {purpose} 목표를 달성해요!
+        </div>
+      )}
     </div>
   );
 }

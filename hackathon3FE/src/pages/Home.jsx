@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useHomeData } from "../hooks/useHomeData";
-import { buildWeekStrip } from "../utils/date";
-import WeekStrip from "../components/home/WeekStrip";
+import { buildWeekStrip, daysBetween } from "../utils/date";
+import AnalysisProgressCard from "../components/home/AnalysisProgressCard";
 import DdayCard from "../components/home/DdayCard";
 import TodoChecklist from "../components/home/TodoChecklist";
-import SkinTypeBanner from "../components/home/SkinTypeBanner";
+import TodayCompleteBanner from "../components/home/TodayCompleteBanner";
 import ConcernSection from "../components/home/ConcernSection";
 
 export default function Home() {
@@ -40,19 +40,29 @@ export default function Home() {
     );
   }
 
-  // 각 날짜 칸은 그날 실제로 체크리스트를 다 했는지(checkHistory)를 그대로 보여줍니다.
   const weekStrip = buildWeekStrip(new Date(), checkHistory);
+  const totalPlanDays = daysBetween(onboarding.createdAt, onboarding.goalDate);
+  const dayCount = daysBetween(onboarding.createdAt, new Date()) + 1;
+  const isTodayCompleted = todayChecks.cleansingDone && todayChecks.skincareDone;
 
   return (
     <section className="bg-[#E7E7E8] px-5 pt-4 pb-4 flex flex-1 flex-col gap-4">
-      <WeekStrip days={weekStrip} />
+      <AnalysisProgressCard days={weekStrip} dayCount={dayCount} />
 
-      <div className="flex gap-2.5">
-        <DdayCard purpose={onboarding.purpose} dday={dday} />
+      <DdayCard
+        purpose={onboarding.purpose}
+        dday={dday}
+        totalDays={totalPlanDays}
+      />
+
+      <div>
+        <div className="mb-2 text-[15px] font-bold text-[#1f1f1f]">
+          오늘의 체크
+        </div>
         <TodoChecklist todayChecks={todayChecks} onToggle={toggleTodo} />
       </div>
 
-      <SkinTypeBanner nickname={onboarding.name} baseType={onboarding.baseType} />
+      {isTodayCompleted && <TodayCompleteBanner />}
 
       <ConcernSection cards={cards} />
     </section>
