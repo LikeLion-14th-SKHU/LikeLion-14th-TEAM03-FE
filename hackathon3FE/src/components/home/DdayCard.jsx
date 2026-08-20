@@ -13,7 +13,7 @@ export default function DdayCard({ purpose, dday }) {
         {purpose} 까지
       </div>
 
-      <div className="mt-1.5 text-center text-[64px] font-black leading-none tracking-tight">
+      <div className="mt-1.5 text-center text-[80px] font-black leading-none tracking-tight">
         {text}
       </div>
 

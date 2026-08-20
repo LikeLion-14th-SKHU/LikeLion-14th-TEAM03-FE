@@ -6,7 +6,9 @@ export default function WeekStrip({ days }) {
     <div className="flex justify-between">
       {days.map((day) => {
         const checked = day.isChecked;
-        const state = checked
+        const state = day.isBeforeStart
+          ? "beforeStart"
+          : checked
           ? "done"
           : day.isToday
           ? "today"
@@ -19,6 +21,7 @@ export default function WeekStrip({ days }) {
           today: "border-2 border-[#285E3C] bg-white text-[#1f1f1f]",
           missed: "bg-[#D9D9D9] text-[#1f1f1f]",
           upcoming: "bg-transparent text-[#1f1f1f]",
+          beforeStart: "bg-transparent text-[#c9c6c0]",
         }[state];
 
         const labelClass =
@@ -31,6 +34,7 @@ export default function WeekStrip({ days }) {
           today: "오늘",
           missed: "미완료",
           upcoming: "예정",
+          beforeStart: "",
         }[state];
 
         return (

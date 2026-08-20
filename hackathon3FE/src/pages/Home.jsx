@@ -40,7 +40,11 @@ export default function Home() {
     );
   }
 
-  const weekStrip = buildWeekStrip(new Date(), checkHistory);
+  const weekStrip = buildWeekStrip(
+    new Date(),
+    checkHistory,
+    onboarding.createdAt,
+  );
   const totalPlanDays = daysBetween(onboarding.createdAt, onboarding.goalDate);
   const dayCount = daysBetween(onboarding.createdAt, new Date()) + 1;
   const isTodayCompleted = todayChecks.cleansingDone && todayChecks.skincareDone;

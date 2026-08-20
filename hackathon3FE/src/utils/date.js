@@ -27,8 +27,11 @@ export function daysBetween(startIso, endIso) {
  * 쌓인 "그날 체크리스트를 다 했는지" 기록)에 있는 값만 그대로 반영합니다.
  * 기록이 없는 날짜(과거든 미래든)는 전부 미완료(흰색)로 표시됩니다 — 즉 매일
  * 체크할 때마다 그날 기록이 자동으로 쌓이는 구조예요.
+ * startDateIso(플랜 시작일)보다 이전 날짜는 애초에 체크할 수 없었던 날이므로
+ * "미완료"가 아니라 그냥 날짜(isBeforeStart)로만 표시합니다.
  */
-export function buildWeekStrip(centerDate, checkHistory = {}) {
+export function buildWeekStrip(centerDate, checkHistory = {}, startDateIso) {
+  const startDate = startDateIso ? isoDate(new Date(startDateIso)) : null;
   const days = [];
   for (let offset = -2; offset <= 4; offset++) {
     const d = new Date(centerDate);
@@ -41,6 +44,7 @@ export function buildWeekStrip(centerDate, checkHistory = {}) {
       isToday: offset === 0,
       isPast: offset < 0,
       isChecked: !!checkHistory[date],
+      isBeforeStart: !!startDate && date < startDate,
     });
   }
   return days;
