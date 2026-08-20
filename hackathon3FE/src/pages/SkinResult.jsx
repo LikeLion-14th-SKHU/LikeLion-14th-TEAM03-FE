@@ -501,11 +501,11 @@ export default function SkinResult() {
       <div className="px-4 pb-24">
         {/* 화장품 성분 추천 */}
         <section className="mb-6 mt-7 ">
-          <div className="relative mb-4 rounded-2xl">
+          <div className="relative mb-4 ">
             <img
               src={resultPage1Image}
               alt=""
-              className="block h-auto w-full"
+              className="block h-auto w-full rounded-2xl"
             />
 
             <div className="absolute left-5 top-7 w-[68%]">
