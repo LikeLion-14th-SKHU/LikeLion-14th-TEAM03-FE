@@ -447,7 +447,7 @@ export default function OnboardingStart() {
       </div>
 
       {/* 게이지 / 시작하기 버튼 */}
-      <div className="relative mb-[32px] h-[52px] w-full shrink-0">
+      <div className="relative mb-[80px] h-[52px] w-full shrink-0">
         {showGauge && (
           <div
             className={`absolute left-1/2 top-0 w-[60%] -translate-x-1/2 transition-opacity duration-1000 ease-out ${
