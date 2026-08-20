@@ -62,7 +62,7 @@ function HistoryDetailRow({ label, value }) {
 }
 
 export default function SkinHistorySection({ history, onAdd }) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const [openItemId, setOpenItemId] = useState(null);
 
   return (
