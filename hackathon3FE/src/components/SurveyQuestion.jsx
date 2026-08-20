@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function SurveyQuestion({
   question,
   questionNumber,
@@ -8,15 +10,30 @@ export default function SurveyQuestion({
   onNext,
 }) {
   const isMultiple = question.multiple;
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  const moveToNext = (selectedAnswer) => {
+    setIsLeaving(true);
+
+    setTimeout(() => {
+      onNext(selectedAnswer);
+    }, 250);
+  };
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+    <div
+      className={`
+        flex min-h-0 flex-1 flex-col overflow-hidden
+        transition-all duration-300 ease-out
+        ${isLeaving ? "-translate-x-3 opacity-0" : "translate-x-0 opacity-100"}
+      `}
+    >
       <p className="relative m-0 mt-[40px] shrink-0 text-center text-[16px] font-medium text-[#2a2a2a]">
         <button
           type="button"
           aria-label="이전 질문"
           onClick={onPrevious}
-          className="absolute left-0 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center bg-transparent p-0 text-[#2a2a2a]"
+          className="absolute left-0 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-0 text-[#2a2a2a] outline-none"
         >
           <svg
             aria-hidden="true"
@@ -70,8 +87,8 @@ export default function SurveyQuestion({
 
                 if (!isMultiple) {
                   setTimeout(() => {
-                    onNext(nextSelectedOption);
-                  }, 180);
+                    moveToNext(nextSelectedOption);
+                  }, 150);
                 }
               }}
               style={{
@@ -83,25 +100,17 @@ export default function SurveyQuestion({
                 borderWidth: "1px",
               }}
               className={`
-    w-full
-    cursor-pointer
-    rounded-[10px]
-    px-4
-    text-[18px]
-    text-[#2a2a2a]
-    outline-none
+                w-full cursor-pointer rounded-[10px] px-4
+                text-[18px] text-[#2a2a2a] outline-none
+                transition-all duration-300 ease-out
 
-    transition-all
-    duration-300
-    ease-out
+                hover:bg-[#F4F8F5]
+                hover:shadow-[0_4px_12px_rgba(40,94,60,0.10)]
 
-    hover:bg-[#F4F8F5]
-    hover:shadow-[0_4px_12px_rgba(40,94,60,0.10)]
+                active:bg-[#E8F1EB]
 
-    active:bg-[#E8F1EB]
-
-    ${isSelected ? "shadow-[0_4px_12px_rgba(40,94,60,0.12)]" : ""}
-  `}
+                ${isSelected ? "shadow-[0_4px_12px_rgba(40,94,60,0.12)]" : ""}
+              `}
             >
               <span
                 className={`inline-block transition-colors duration-300 ${
@@ -118,8 +127,8 @@ export default function SurveyQuestion({
       {isMultiple && (
         <button
           type="button"
-          onClick={() => onNext(selectedOption)}
-          className="absolute bottom-[24px] right-[24px] h-[40px] w-[88px] rounded-[8px] bg-[#285E3C] text-[17px] font-medium text-white"
+          onClick={() => moveToNext(selectedOption)}
+          className="absolute bottom-[24px] right-[24px] h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white"
         >
           다음
         </button>
