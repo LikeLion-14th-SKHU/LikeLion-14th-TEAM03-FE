@@ -60,7 +60,7 @@ function ProfileForm({ onComplete }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative flex h-full w-full animate-[profileIn_500ms_ease-out_both] flex-col px-6 pb-8 pt-5"
+      className="relative flex min-h-full w-full animate-[profileIn_500ms_ease-out_both] flex-col px-6 pb-8 pt-5"
     >
       <img src={miniLogo} alt="오뷰" className="h-7 w-auto self-start" />
 
@@ -182,7 +182,7 @@ function ProfileForm({ onComplete }) {
 
       <button
         type="submit"
-        className="absolute bottom-[3%] text-[#fff] right-[7%] border-none h-[40px] w-[88px] rounded-[8px] bg-[#285E3C] text-[17px] font-medium text-white transition-all hover:bg-[#204C31] active:scale-95"
+        className="mt-auto self-end border-none h-[40px] w-[88px] rounded-[8px] bg-[#285E3C] text-[17px] font-medium text-white transition-all hover:bg-[#204C31] active:scale-95"
       >
         다음
       </button>
@@ -223,7 +223,7 @@ function GoalForm({ profile, onComplete }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative flex h-full w-full animate-[profileIn_500ms_ease-out_both] flex-col px-6 pb-8 pt-5"
+      className="relative flex min-h-full w-full animate-[profileIn_500ms_ease-out_both] flex-col px-6 pb-8 pt-5"
     >
       <img src={miniLogo} alt="오뷰" className="h-7 w-auto self-start" />
 
@@ -291,7 +291,7 @@ function GoalForm({ profile, onComplete }) {
 
       <button
         type="submit"
-        className="absolute bottom-[3%] text-[#fff] right-[7%] h-[40px] w-[88px] rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white transition-all hover:bg-[#204C31] active:scale-95"
+        className="mt-auto self-end h-[40px] w-[88px] rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white transition-all hover:bg-[#204C31] active:scale-95"
       >
         완료
       </button>

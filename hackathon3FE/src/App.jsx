@@ -21,6 +21,7 @@ function AppShell() {
   const isImmersive = ["/", "/onboarding", "/skin-survey"].includes(
     location.pathname,
   );
+  const isOnboarding = ["/", "/onboarding"].includes(location.pathname);
 
   const isResultPage = location.pathname === "/skin-result";
 
@@ -34,7 +35,7 @@ function AppShell() {
 
         <main
           className={`no-scrollbar flex min-h-0 flex-1 flex-col px-0 py-0 ${
-            isImmersive ? "overflow-hidden" : "overflow-y-auto"
+            isImmersive && !isOnboarding ? "overflow-hidden" : "overflow-y-auto"
           }`}
         >
           <Routes>

@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import { getSkinResult } from "../api/skinResult";
+import resultPage1Image from "../assets/img/icon/ResultPage1.png";
+import serumImage from "../assets/img/icon/세럼 이미지.png";
+import ampouleImage from "../assets/img/icon/앰플 이미지.png";
+import creamImage from "../assets/img/icon/크림 이미지.png";
+import tonerImage from "../assets/img/icon/토너 이미지.png";
 
 const GREEN = "#2d6a4a";
 
@@ -100,6 +105,101 @@ function normalizeProducts(products = []) {
     .filter(Boolean);
 }
 
+function getProductImage(productId, product) {
+  const productText = [
+    productId,
+    product?.name,
+    product?.type,
+    product?.category,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  if (productText.includes("ton") || productText.includes("토너")) {
+    return tonerImage;
+  }
+
+  if (productText.includes("ser") || productText.includes("세럼")) {
+    return serumImage;
+  }
+
+  if (
+    productText.includes("amp") ||
+    productText.includes("앰플") ||
+    productText.includes("엠플")
+  ) {
+    return ampouleImage;
+  }
+
+  if (productText.includes("cre") || productText.includes("크림")) {
+    return creamImage;
+  }
+
+  return null;
+}
+
+function SolutionIcon({ name }) {
+  const iconProps = {
+    width: 32,
+    height: 32,
+    viewBox: "0 0 32 32",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.6,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": true,
+  };
+
+  if (name.includes("홍조")) {
+    return (
+      <svg {...iconProps}>
+        <path d="M5 13c3-3 5 3 8 0s5 3 8 0 4 1 6-1" />
+        <path d="M5 19c3-3 5 3 8 0s5 3 8 0 4 1 6-1" />
+        <path d="M5 25c3-3 5 3 8 0s5 3 8 0 4 1 6-1" />
+      </svg>
+    );
+  }
+
+  if (name.includes("미백")) {
+    return (
+      <svg {...iconProps}>
+        <path d="M9 24c-1-8 3-13 12-16 1 8-3 13-12 16Z" />
+        <path d="M9 24c3-5 6-9 11-13" />
+        <path d="m24 6 1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3Z" />
+      </svg>
+    );
+  }
+
+  if (name.includes("모공")) {
+    return (
+      <svg {...iconProps}>
+        <path d="m16 4 2.2 7.8L26 14l-7.8 2.2L16 24l-2.2-7.8L6 14l7.8-2.2L16 4Z" />
+        <path d="m26 21 .9 3.1L30 25l-3.1.9L26 29l-.9-3.1L22 25l3.1-.9L26 21Z" />
+      </svg>
+    );
+  }
+
+  if (name.includes("제모")) {
+    return (
+      <svg {...iconProps}>
+        <path d="m10 23 12-12" />
+        <path d="m8 25 2-2 2 2-2 2-2-2Z" />
+        <path d="m20 11 2-2 3 3-2 2" />
+        <path d="M22 6h5M24.5 3.5v5" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...iconProps}>
+      <path d="M16 27s-8-5.2-8-12a4.7 4.7 0 0 1 8-3.3A4.7 4.7 0 0 1 24 15c0 6.8-8 12-8 12Z" />
+      <path d="M16 8V4M13 6h6" />
+    </svg>
+  );
+}
+
 function IngredientCard({ name, effect, caution, products, productsDetail }) {
   return (
     <div className="mb-3 rounded-2xl bg-white p-5 shadow-sm">
@@ -143,9 +243,17 @@ function IngredientCard({ name, effect, caution, products, productsDetail }) {
                   className="flex flex-col items-center gap-1"
                 >
                   <div
-                    className="w-full rounded-xl bg-gray-200"
+                    className="flex w-full items-center justify-center overflow-hidden rounded-xl bg-gray-100"
                     style={{ aspectRatio: "4/3" }}
-                  />
+                  >
+                    {getProductImage(productId, matchedProduct) && (
+                      <img
+                        src={getProductImage(productId, matchedProduct)}
+                        alt={matchedProduct?.name || productId}
+                        className="h-full w-full object-contain"
+                      />
+                    )}
+                  </div>
 
                   <span className="text-center text-xs text-gray-600">
                     {matchedProduct?.name || productId}
@@ -164,13 +272,14 @@ function TreatmentCard({ name, description, time, recovery, cycle }) {
   return (
     <div className="mb-3 rounded-2xl bg-white p-5 shadow-sm">
       <p
+        className="mb-1.5 flex items-center gap-2"
         style={{
           fontWeight: 700,
           fontSize: 16,
           color: GREEN,
-          marginBottom: 6,
         }}
       >
+        <SolutionIcon name={name} />
         {name}
       </p>
 
@@ -390,18 +499,28 @@ export default function SkinResult() {
       <div className="px-4 pb-24">
         {/* 화장품 성분 추천 */}
         <section className="mb-6 mt-7">
-          <h1
+          <div
+            className="mb-4 rounded-2xl bg-cover bg-center bg-no-repeat px-5 py-7"
             style={{
-              fontWeight: 900,
-              fontSize: 24,
-              color: "#111",
-              marginBottom: 4,
+              backgroundImage: `url(${resultPage1Image})`,
+              minHeight: 190,
             }}
           >
-            화장품 성분 추천
-          </h1>
+            <div className="w-[60%]">
+              <h1
+                style={{
+                  fontWeight: 900,
+                  fontSize: 24,
+                  color: "#111",
+                  marginBottom: 4,
+                }}
+              >
+                화장품 성분 추천
+              </h1>
 
-          <p className="mb-4 text-sm text-gray-500">{scoreSummary}</p>
+              <p className="text-sm text-gray-500">{scoreSummary}</p>
+            </div>
+          </div>
 
           {ingredientCards.length > 0 ? (
             ingredientCards.map((ingredient) => (
@@ -499,40 +618,94 @@ export default function SkinResult() {
 
         {/* 시술 상담 */}
         <section className="mb-2">
-          <div className="rounded-2xl bg-white p-5 text-center shadow-sm">
-            <h2
-              style={{
-                fontWeight: 900,
-                fontSize: 24,
-                color: "#111",
-                marginBottom: 8,
-              }}
-            >
-              시술 상담
-            </h2>
+          <div className="overflow-hidden rounded-2xl shadow-sm">
+            <div className="relative bg-[#fff36b] px-5 pb-5 pt-5">
+              <div className="relative z-10 pr-[40%]">
+                <p className="mb-1 text-[18px] font-bold text-[#263238]">
+                  시술 상담은
+                </p>
 
-            <p className="mb-5 text-sm leading-relaxed text-gray-600">
-              전문 피부과 전문의와 현재 피부 상태에 대해
-              <br />
-              자세히 논의해보세요
-            </p>
+                <a
+                  href="https://dernaclinic.com/ko"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block text-[52px] font-black leading-[0.95] tracking-[-2px] text-[#343434] no-underline"
+                >
+                  DERMA
+                </a>
 
-            <button
-              style={{
-                background: "#b5a842",
-                color: "white",
-                fontWeight: 700,
-                fontSize: 16,
-                borderRadius: 999,
-                padding: "14px 0",
-                width: "100%",
-                border: "none",
-                cursor: "pointer",
-                letterSpacing: 1,
-              }}
-            >
-              DERNA 홈페이지
-            </button>
+                <p className="absolute left-[calc(50%+8px)] top-14 whitespace-nowrap text-[16px] font-bold text-[#263238]">
+                  와 함께
+                </p>
+
+                <p className="mt-3 text-[12px] leading-relaxed text-[#454545]">
+                  전문 피부과 의료진이
+                  <br />
+                  현재 피부 상태에 맞는 시술을 제안해드려요.
+                </p>
+              </div>
+
+              <svg
+                aria-hidden="true"
+                className="absolute right-5 top-6 h-36 w-30 text-[#3d4147]"
+                viewBox="0 0 120 150"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M22 96h76M31 96V42h58v54M48 42V24h24v18M42 61h10M68 61h10M52 96V76h16v20" />
+                <circle cx="60" cy="22" r="17" fill="#fff36b" />
+                <path d="M60 14v16M52 22h16" />
+              </svg>
+
+              <a
+                href="https://dernaclinic.com/ko"
+                target="_blank"
+                rel="noreferrer"
+                className="relative z-10 mt-4 flex items-center justify-between rounded-[10px] bg-[#454545] px-5 py-3 text-[16px] font-bold text-[#fff36b] no-underline"
+              >
+                <span>DERMA 상담 바로가기</span>
+                <span aria-hidden="true" className="text-[27px] leading-none">
+                  ›
+                </span>
+              </a>
+            </div>
+
+            <div className="flex items-center gap-3 bg-[#fffbd0] px-5 py-3">
+              <svg
+                aria-hidden="true"
+                className="h-8 w-8 shrink-0 text-[#4a4d4d]"
+                viewBox="0 0 32 32"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <path d="m16 3 11 5v8c0 6.5-4.6 10.8-11 13-6.4-2.2-11-6.5-11-13V8l11-5Z" />
+                <path d="m10.5 16 3.5 3.5 7.5-8" />
+              </svg>
+
+              <p className="text-[10px] leading-relaxed text-[#555]">
+                DERMA는 피부과 전문 의료기관으로,
+                <br />
+                안전하고 체계적인 진료를 제공합니다.
+              </p>
+
+              <a
+                href="https://dernaclinic.com/ko"
+                target="_blank"
+                rel="noreferrer"
+                className="ml-auto text-right no-underline"
+              >
+                <strong className="block text-[20px] mt-3 font-bold leading-none tracking-[3px] text-[#5a5a5a]">
+                  DERMA
+                </strong>
+                <span className="text-[8px] text-[#5a5a5a]">
+                  Dermatology Clinic
+                </span>
+              </a>
+            </div>
           </div>
         </section>
       </div>

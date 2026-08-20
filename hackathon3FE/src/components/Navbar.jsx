@@ -20,7 +20,7 @@ export default function Navbar() {
             end={to === "/"}
             className={({ isActive }) => {
               return [
-                "flex flex-1 flex-col items-center justify-center gap-3 rounded-[14px] px-2 py-2 text-[11px] font-medium no-underline transition-colors duration-300 ease-out",
+                "flex flex-1 flex-col items-center justify-center gap-1 rounded-[14px] px-2 py-2 text-[11px] font-medium no-underline transition-colors duration-300 ease-out",
                 isActive ? "text-[#285E3C]" : "text-[#2A2A2A]",
               ].join(" ");
             }}

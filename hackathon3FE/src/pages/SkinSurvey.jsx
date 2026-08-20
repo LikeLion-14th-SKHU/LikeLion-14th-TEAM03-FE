@@ -4,8 +4,8 @@ import { getSkinResult } from "../api/skinResult";
 import { saveOnboarding } from "../api/onboarding";
 import miniLogo from "../assets/img/logo/MiniLogo.svg";
 import leaf from "../assets/img/icon/leaf.svg";
+import loadingGif from "../assets/gif/icons8-loading.gif";
 import SurveyQuestion from "../components/SurveyQuestion";
-import CompletionLoading from "../components/CompletionLoading";
 import {
   SKIN_SURVEY_TOTAL,
   skinSurveyQuestions,
@@ -47,7 +47,7 @@ export default function SkinSurvey() {
 
         setAnswers(nextAnswers);
         persistOnboardingWeights(nextAnswers);
-        return;
+        return nextAnswers[currentQuestion.id];
       }
 
       const existingSelected = answers[currentQuestion.id] || [];
@@ -66,7 +66,7 @@ export default function SkinSurvey() {
 
       setAnswers(nextAnswers);
       persistOnboardingWeights(nextAnswers);
-      return;
+      return nextAnswers[currentQuestion.id];
     }
 
     const nextAnswers = {
@@ -80,6 +80,7 @@ export default function SkinSurvey() {
 
     setAnswers(nextAnswers);
     persistOnboardingWeights(nextAnswers);
+    return nextAnswers[currentQuestion.id];
   };
 
   const goToPreviousQuestion = () => {
@@ -90,8 +91,8 @@ export default function SkinSurvey() {
     setQuestionIndex((currentIndex) => currentIndex - 1);
   };
 
-  const goToNextQuestion = () => {
-    const currentAnswer = answers[currentQuestion.id];
+  const goToNextQuestion = (selectedAnswer) => {
+    const currentAnswer = selectedAnswer ?? answers[currentQuestion.id];
     const hasAnswer = Array.isArray(currentAnswer)
       ? currentAnswer.length > 0
       : currentAnswer !== undefined &&
@@ -165,6 +166,30 @@ export default function SkinSurvey() {
       return;
     }
   };
+
+  if (isSubmitting) {
+    return (
+      <section className="flex min-h-0 flex-1 flex-col items-center justify-center bg-white">
+        <img
+          src={loadingGif}
+          alt="결과를 준비하고 있습니다"
+          className="h-32 w-32 object-contain"
+        />
+
+        <div className="mt-6 text-center">
+          <p className="m-0 text-[18px] font-semibold text-[#285E3C]">
+            결과를 준비하고 있습니다.
+          </p>
+
+          <p className="m-0 mt-2 text-[14px] leading-[1.5] text-[#777]">
+            네트워크 상태에 따라
+            <br />
+            최대 1분 정도 소요될 수 있습니다.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   if (stage === "concern") {
     return (

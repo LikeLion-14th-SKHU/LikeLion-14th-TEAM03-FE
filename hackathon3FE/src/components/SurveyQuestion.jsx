@@ -6,14 +6,35 @@ export default function SurveyQuestion({
   onSelect,
   onPrevious,
   onNext,
-  isLastQuestion,
 }) {
+  const isMultiple = question.multiple;
+
   return (
     <div className="flex flex-1 animate-[profileIn_500ms_ease-out_both] flex-col">
       <p
-        className="m-0 text-center text-[16px] font-medium text-[#2a2a2a]"
+        className="relative m-0 text-center text-[16px] font-medium text-[#2a2a2a]"
         style={{ marginTop: "15%" }}
       >
+        <button
+          type="button"
+          aria-label="이전 질문"
+          onClick={onPrevious}
+          className="absolute left-0 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-0 text-[#2a2a2a] outline-none transition-transform duration-200 hover:scale-110 active:scale-95"
+        >
+          <svg
+            aria-hidden="true"
+            width="17"
+            height="17"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m13 5-6 5 6 5" />
+          </svg>
+        </button>
         <span className="text-[#285E3C]">{questionNumber}</span>/
         {totalQuestions}
       </p>
@@ -30,13 +51,13 @@ export default function SurveyQuestion({
       </h1>
 
       <div
-        className="mx-auto mt-[10%] flex flex-col"
+        className="mx-auto flex flex-col"
         style={{
           rowGap: "24px",
           width: "75%",
-          marginTop: "20%",
-          maxHeight: "48vh",
-          overflowY: "auto",
+          marginTop: isMultiple ? "10%" : "20%",
+          maxHeight: isMultiple ? "40vh" : "48vh",
+          overflowY: isMultiple ? "auto" : "visible",
           padding: "2px 4px",
           scrollbarWidth: "none",
         }}
@@ -51,18 +72,28 @@ export default function SurveyQuestion({
               key={option.id}
               type="button"
               aria-pressed={isSelected}
-              onClick={() => onSelect(option.id)}
+              onClick={() => {
+                const nextSelectedOption = onSelect(option.id);
+
+                // 단일 선택 질문만 선택 즉시 다음으로 이동
+                if (!isMultiple) {
+                  onNext(nextSelectedOption);
+                }
+              }}
               style={{
                 minHeight: "65px",
-                backgroundColor: "#FFFFFF",
+                flexShrink: 0,
+                backgroundColor: isSelected ? "#E8F1EB" : "#FFFFFF",
                 borderColor: "#285E3C",
                 borderStyle: "solid",
                 borderWidth: "1px",
               }}
-              className="w-full cursor-pointer rounded-[10px] border-[#285E3C] bg-white px-4 text-[18px] text-[#2a2a2a] outline-none transition-transform duration-300 active:scale-[0.98]"
+              className="w-full cursor-pointer rounded-[10px] border-[#285E3C] px-4 text-[18px] text-[#2a2a2a] outline-none transition-[background-color,transform] duration-300 active:scale-[0.98]"
             >
               <span
-                className={`inline-block transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSelected ? "scale-110" : "scale-100"}`}
+                className={`inline-block transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  isSelected ? "scale-110" : "scale-100"
+                }`}
               >
                 {option.label}
               </span>
@@ -71,41 +102,17 @@ export default function SurveyQuestion({
         })}
       </div>
 
-      <div className="absolute inset-x-0 bottom-[3%] z-50 h-[40px] w-full">
+      {/* 복수선택 질문에서만 다음 버튼 표시 */}
+      {isMultiple && (
         <button
           type="button"
-          onClick={onPrevious}
-          className="absolute top-0 h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#2a2a2a] text-[17px] font-medium text-white outline-none transition-all duration-300 hover:bg-black active:scale-95"
-          style={{
-            color: "#FFFFFF",
-            backgroundColor: "#2a2a2a",
-            left: "5%",
-          }}
+          onClick={() => onNext(selectedOption)}
+          className="absolute bottom-[3%] right-[7%] h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white outline-none transition-all duration-300 hover:bg-[#204C31] active:scale-95"
+          style={{ color: "#FFFFFF" }}
         >
-          이전
+          다음
         </button>
-        <button
-          type="button"
-          onClick={() => {
-            const hasAnswer = Array.isArray(selectedOption)
-              ? selectedOption.length > 0
-              : selectedOption !== undefined &&
-                selectedOption !== null &&
-                selectedOption !== "";
-
-            if (!hasAnswer) {
-              window.alert("응답해주세요.");
-              return;
-            }
-
-            onNext();
-          }}
-          className="absolute top-0 h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white outline-none transition-all duration-300 hover:bg-[#204C31] active:scale-95"
-          style={{ color: "#FFFFFF", right: "5%" }}
-        >
-          {isLastQuestion ? "완료" : "다음"}
-        </button>
-      </div>
+      )}
     </div>
   );
 }
