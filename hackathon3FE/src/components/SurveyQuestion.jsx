@@ -11,8 +11,12 @@ export default function SurveyQuestion({
 }) {
   const isMultiple = question.multiple;
   const [isLeaving, setIsLeaving] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
 
   const moveToNext = (selectedAnswer) => {
+    if (isMoving) return;
+
+    setIsMoving(true);
     setIsLeaving(true);
 
     setTimeout(() => {
@@ -20,20 +24,49 @@ export default function SurveyQuestion({
     }, 250);
   };
 
+  const handlePrevious = () => {
+    if (isMoving) return;
+
+    setIsMoving(true);
+    setIsLeaving(true);
+
+    setTimeout(() => {
+      onPrevious();
+    }, 250);
+  };
+
   return (
     <div
       className={`
         flex min-h-0 flex-1 flex-col overflow-hidden
-        transition-all duration-300 ease-out
-        ${isLeaving ? "-translate-x-3 opacity-0" : "translate-x-0 opacity-100"}
+        transition-[opacity,transform]
+        duration-300
+        ease-out
+        ${
+          isLeaving
+            ? "translate-y-[4px] opacity-0"
+            : "translate-y-0 opacity-100"
+        }
       `}
     >
+      {/* 질문 번호 + 이전 버튼 */}
       <p className="relative m-0 mt-[40px] shrink-0 text-center text-[16px] font-medium text-[#2a2a2a]">
         <button
           type="button"
           aria-label="이전 질문"
-          onClick={onPrevious}
-          className="absolute left-0 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-0 text-[#2a2a2a] outline-none"
+          onClick={handlePrevious}
+          className="
+            absolute left-0 top-1/2
+            flex h-8 w-8
+            -translate-y-1/2
+            cursor-pointer
+            items-center justify-center
+            border-none bg-transparent p-0
+            text-[#2a2a2a]
+            outline-none
+            transition-colors duration-200
+            hover:text-[#285E3C]
+          "
         >
           <svg
             aria-hidden="true"
@@ -49,12 +82,20 @@ export default function SurveyQuestion({
             <path d="m13 5-6 5 6 5" />
           </svg>
         </button>
-        <span className="text-[#285E3C]">{questionNumber}</span>/
+
+        <span className="text-[#285E3C]">{questionNumber}</span>
+        <span>/</span>
         {totalQuestions}
       </p>
 
+      {/* 질문 */}
       <h1
-        className="m-0 mt-[48px] shrink-0 text-center text-[19px] leading-[1.45] text-[#2a2a2a]"
+        className="
+          m-0 mt-[48px] shrink-0
+          text-center text-[19px]
+          leading-[1.45]
+          text-[#2a2a2a]
+        "
         style={{ fontWeight: 350 }}
       >
         {question.question.map((line) => (
@@ -64,75 +105,123 @@ export default function SurveyQuestion({
         ))}
       </h1>
 
-      <div
-        className="mx-auto mt-[42px] flex min-h-0 w-[75%] flex-1 flex-col overflow-y-auto pb-[32px]"
-        style={{
-          rowGap: "20px",
-          scrollbarWidth: "none",
-          WebkitOverflowScrolling: "touch",
-        }}
-      >
-        {question.options.map((option) => {
-          const isSelected = Array.isArray(selectedOption)
-            ? selectedOption.includes(option.id)
-            : selectedOption === option.id;
+      {/* 선지 + 복수선택 다음 버튼 */}
+      <div className="mx-auto mt-[56px] flex min-h-0 w-[75%] flex-col">
+        {/* 선지 스크롤 영역 */}
+        <div
+          className="flex flex-col overflow-y-auto pr-[2px]"
+          style={{
+            gap: "20px",
 
-          return (
-            <button
-              key={option.id}
-              type="button"
-              aria-pressed={isSelected}
-              onClick={() => {
-                const nextSelectedOption = onSelect(option.id);
+            // 65px 버튼 4개 + 20px 간격 3개
+            maxHeight: "360px",
 
-                if (!isMultiple) {
-                  setTimeout(() => {
-                    moveToNext(nextSelectedOption);
-                  }, 150);
-                }
-              }}
-              style={{
-                minHeight: "65px",
-                flexShrink: 0,
-                backgroundColor: isSelected ? "#E8F1EB" : "#FFFFFF",
-                borderColor: "#285E3C",
-                borderStyle: "solid",
-                borderWidth: "1px",
-              }}
-              className={`
-                w-full cursor-pointer rounded-[10px] px-4
-                text-[18px] text-[#2a2a2a] outline-none
-                transition-all duration-300 ease-out
-
-                hover:bg-[#F4F8F5]
-                hover:shadow-[0_4px_12px_rgba(40,94,60,0.10)]
-
-                active:bg-[#E8F1EB]
-
-                ${isSelected ? "shadow-[0_4px_12px_rgba(40,94,60,0.12)]" : ""}
-              `}
-            >
-              <span
-                className={`inline-block transition-colors duration-300 ${
-                  isSelected ? "font-medium text-[#285E3C]" : ""
-                }`}
-              >
-                {option.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {isMultiple && (
-        <button
-          type="button"
-          onClick={() => moveToNext(selectedOption)}
-          className="absolute bottom-[24px] right-[24px] h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white"
+            scrollbarWidth: "none",
+            WebkitOverflowScrolling: "touch",
+          }}
         >
-          다음
-        </button>
-      )}
+          {question.options.map((option) => {
+            const isSelected = Array.isArray(selectedOption)
+              ? selectedOption.includes(option.id)
+              : selectedOption === option.id;
+
+            return (
+              <button
+                key={option.id}
+                type="button"
+                aria-pressed={isSelected}
+                disabled={isMoving}
+                onClick={() => {
+                  if (isMoving) return;
+
+                  const nextSelectedOption = onSelect(option.id);
+
+                  // 단일 선택은 선택 효과를 잠깐 보여준 뒤 이동
+                  if (!isMultiple) {
+                    setTimeout(() => {
+                      moveToNext(nextSelectedOption);
+                    }, 150);
+                  }
+                }}
+                style={{
+                  minHeight: "65px",
+                  flexShrink: 0,
+                  borderColor: "#285E3C",
+                  borderStyle: "solid",
+                  borderWidth: "1px",
+                }}
+                className={`
+                  w-full
+                  cursor-pointer
+                  rounded-[10px]
+                  px-4
+                  text-[18px]
+                  outline-none
+
+                  transition-[background-color,box-shadow,border-color]
+                  duration-300
+                  ease-out
+
+                  ${
+                    isSelected
+                      ? "bg-[#E8F1EB] shadow-[0_3px_10px_rgba(40,94,60,0.10)]"
+                      : "bg-white hover:bg-[#F4F8F5] hover:shadow-[0_3px_10px_rgba(40,94,60,0.08)]"
+                  }
+
+                  disabled:cursor-default
+                `}
+              >
+                <span
+                  className={`
+                    inline-block
+                    transition-colors
+                    duration-300
+                    ${
+                      isSelected
+                        ? "font-medium text-[#285E3C]"
+                        : "text-[#2a2a2a]"
+                    }
+                  `}
+                >
+                  {option.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 복수 선택 질문에서만 표시 */}
+        {isMultiple && (
+          <div className="mt-[22px] flex shrink-0 justify-end">
+            <button
+              type="button"
+              disabled={isMoving}
+              onClick={() => moveToNext(selectedOption)}
+              className="
+                h-[40px] w-[88px]
+                cursor-pointer
+                rounded-[8px]
+                border-none
+                bg-[#285E3C]
+                text-[17px]
+                font-medium
+                text-white
+                outline-none
+
+                transition-colors
+                duration-300
+
+                hover:bg-[#204C31]
+                disabled:cursor-default
+                disabled:opacity-70
+              "
+              style={{ color: "#FFFFFF" }}
+            >
+              다음
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

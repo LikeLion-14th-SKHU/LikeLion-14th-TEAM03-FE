@@ -506,8 +506,8 @@ export default function SkinResult() {
               className="block h-auto w-full"
             />
 
-            <div className="absolute left-5 top-7 w-[63%]">
-              <h1 className="mb-1 text-2xl font-black text-[#111]">
+            <div className="absolute left-5 top-7 w-[60%]">
+              <h1 className="mb-4 text-2xl font-black text-[#111]">
                 화장품 성분 추천
               </h1>
 
@@ -556,7 +556,7 @@ export default function SkinResult() {
               클렌징 가이드
             </h3>
 
-            <p className="mb-5 whitespace-pre-line text-sm leading-relaxed text-gray-700">
+            <p className="mb-5 whitespace-pre-line text-sm leading-relaxed text-gray-900">
               {cleansingGuide}
             </p>
 
