@@ -69,7 +69,9 @@ export default function SurveyQuestion({
                 const nextSelectedOption = onSelect(option.id);
 
                 if (!isMultiple) {
-                  onNext(nextSelectedOption);
+                  setTimeout(() => {
+                    onNext(nextSelectedOption);
+                  }, 180);
                 }
               }}
               style={{
@@ -80,9 +82,34 @@ export default function SurveyQuestion({
                 borderStyle: "solid",
                 borderWidth: "1px",
               }}
-              className="w-full rounded-[10px] px-4 text-[18px] text-[#2a2a2a]"
+              className={`
+    w-full
+    cursor-pointer
+    rounded-[10px]
+    px-4
+    text-[18px]
+    text-[#2a2a2a]
+    outline-none
+
+    transition-all
+    duration-300
+    ease-out
+
+    hover:bg-[#F4F8F5]
+    hover:shadow-[0_4px_12px_rgba(40,94,60,0.10)]
+
+    active:bg-[#E8F1EB]
+
+    ${isSelected ? "shadow-[0_4px_12px_rgba(40,94,60,0.12)]" : ""}
+  `}
             >
-              {option.label}
+              <span
+                className={`inline-block transition-colors duration-300 ${
+                  isSelected ? "font-medium text-[#285E3C]" : ""
+                }`}
+              >
+                {option.label}
+              </span>
             </button>
           );
         })}

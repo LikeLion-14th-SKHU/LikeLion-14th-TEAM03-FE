@@ -574,8 +574,6 @@ export default function SkinResult() {
             <p className="mb-1 text-sm font-semibold text-gray-800">
               {basicSteps}
             </p>
-
-            <p className="text-xs text-gray-400">（{applicationRules}）</p>
           </div>
         </section>
 
