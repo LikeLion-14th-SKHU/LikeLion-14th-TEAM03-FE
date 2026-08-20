@@ -456,10 +456,12 @@ export default function SkinResult() {
    * cosmetic.summary가
    * 문자열 또는 객체로 들어오는 경우 모두 처리
    */
-  const scoreSummary =
+  const scoreSummaryRaw =
     typeof cosmetic.summary === "string"
       ? cosmetic.summary
       : cosmetic.summary?.summary || "피부 상태를 분석한 맞춤 추천 결과입니다.";
+
+  const scoreSummary = scoreSummaryRaw.replace(/\.\s*/g, ".\n");
 
   /**
    * 루틴
@@ -506,12 +508,21 @@ export default function SkinResult() {
               className="block h-auto w-full"
             />
 
-            <div className="absolute left-5 top-7 w-[60%]">
+            <div className="absolute left-5 top-7 w-[68%]">
               <h1 className="mb-4 text-2xl font-black text-[#111]">
                 화장품 성분 추천
               </h1>
 
-              <p className="text-sm text-gray-500">{scoreSummary}</p>
+              <div className="text-sm leading-relaxed text-gray-800">
+                {scoreSummaryRaw
+                  .split(/(?<=\.)\s*/)
+                  .filter(Boolean)
+                  .map((sentence, index) => (
+                    <p key={index} className="mb-1.5 last:mb-0">
+                      {sentence}
+                    </p>
+                  ))}
+              </div>
             </div>
           </div>
 
@@ -630,7 +641,7 @@ export default function SkinResult() {
                   rel="noreferrer"
                   className="block text-[52px] font-black leading-[0.95] tracking-[-2px] text-[#343434] no-underline"
                 >
-                  DERMA
+                  DERNA
                 </a>
 
                 <p className="absolute left-[calc(50%+8px)] top-14 whitespace-nowrap text-[16px] font-bold text-[#263238]">
@@ -665,7 +676,7 @@ export default function SkinResult() {
                 rel="noreferrer"
                 className="relative z-10 mt-4 flex items-center justify-between rounded-[10px] bg-[#454545] px-5 py-3 text-[16px] font-bold text-[#fff36b] no-underline"
               >
-                <span>DERMA 상담 바로가기</span>
+                <span>DERNA 상담 바로가기</span>
                 <span aria-hidden="true" className="text-[27px] leading-none">
                   ›
                 </span>
@@ -686,7 +697,7 @@ export default function SkinResult() {
               </svg>
 
               <p className="text-[10px] leading-relaxed text-[#555]">
-                DERMA는 피부과 전문 의료기관으로,
+                DERNA는 피부과 전문 의료기관으로,
                 <br />
                 안전하고 체계적인 진료를 제공합니다.
               </p>
@@ -698,10 +709,10 @@ export default function SkinResult() {
                 className="ml-auto text-right no-underline"
               >
                 <strong className="block text-[20px] mt-3 font-bold leading-none tracking-[3px] text-[#5a5a5a]">
-                  DERMA
+                  DERNA
                 </strong>
                 <span className="text-[8px] text-[#5a5a5a]">
-                  Dermatology Clinic
+                  Dernatology Clinic
                 </span>
               </a>
             </div>
