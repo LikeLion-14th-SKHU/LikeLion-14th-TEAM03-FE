@@ -10,13 +10,13 @@ export default function SurveyQuestion({
   const isMultiple = question.multiple;
 
   return (
-    <div className="flex min-h-0 flex-1 animate-[profileIn_500ms_ease-out_both] flex-col overflow-hidden">
-      <p className="relative m-0 mt-[50px] text-center text-[16px] font-medium text-[#2a2a2a]">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <p className="relative m-0 mt-[40px] shrink-0 text-center text-[16px] font-medium text-[#2a2a2a]">
         <button
           type="button"
           aria-label="이전 질문"
           onClick={onPrevious}
-          className="absolute left-0 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-0 text-[#2a2a2a] outline-none transition-transform duration-200 hover:scale-110 active:scale-95"
+          className="absolute left-0 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center bg-transparent p-0 text-[#2a2a2a]"
         >
           <svg
             aria-hidden="true"
@@ -37,7 +37,7 @@ export default function SurveyQuestion({
       </p>
 
       <h1
-        className="m-0 mt-[55px] shrink-0 text-center text-[19px] leading-[1.45] text-[#2a2a2a]"
+        className="m-0 mt-[48px] shrink-0 text-center text-[19px] leading-[1.45] text-[#2a2a2a]"
         style={{ fontWeight: 350 }}
       >
         {question.question.map((line) => (
@@ -48,11 +48,11 @@ export default function SurveyQuestion({
       </h1>
 
       <div
-        className="mx-auto mt-[55px] flex min-h-0 w-[75%] flex-1 flex-col overflow-y-auto pb-6"
+        className="mx-auto mt-[42px] flex min-h-0 w-[75%] flex-1 flex-col overflow-y-auto pb-[32px]"
         style={{
-          rowGap: "24px",
-          padding: "2px 4px 24px",
+          rowGap: "20px",
           scrollbarWidth: "none",
+          WebkitOverflowScrolling: "touch",
         }}
       >
         {question.options.map((option) => {
@@ -80,15 +80,9 @@ export default function SurveyQuestion({
                 borderStyle: "solid",
                 borderWidth: "1px",
               }}
-              className="w-full cursor-pointer rounded-[10px] px-4 text-[18px] text-[#2a2a2a] outline-none transition-[background-color,transform] duration-300 active:scale-[0.98]"
+              className="w-full rounded-[10px] px-4 text-[18px] text-[#2a2a2a]"
             >
-              <span
-                className={`inline-block transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                  isSelected ? "scale-110" : "scale-100"
-                }`}
-              >
-                {option.label}
-              </span>
+              {option.label}
             </button>
           );
         })}
@@ -98,8 +92,7 @@ export default function SurveyQuestion({
         <button
           type="button"
           onClick={() => onNext(selectedOption)}
-          className="absolute bottom-[24px] right-[24px] h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white outline-none"
-          style={{ color: "#FFFFFF" }}
+          className="absolute bottom-[24px] right-[24px] h-[40px] w-[88px] rounded-[8px] bg-[#285E3C] text-[17px] font-medium text-white"
         >
           다음
         </button>

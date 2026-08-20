@@ -239,7 +239,7 @@ export default function SkinSurvey() {
   }
 
   return (
-    <section className="relative flex flex-1 animate-[profileIn_500ms_ease-out_both] flex-col bg-white px-6 pb-8 pt-5">
+    <section className="relative flex min-h-0 h-[100dvh] flex-col overflow-hidden bg-white px-6 pb-8 pt-5">
       <img src={miniLogo} alt="오뷰" className="h-7 w-auto self-start" />
 
       {stage === "survey" ? (
