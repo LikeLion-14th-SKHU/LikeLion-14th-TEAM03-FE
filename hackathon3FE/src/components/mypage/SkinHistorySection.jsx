@@ -73,7 +73,24 @@ export default function SkinHistorySection({ history, onAdd }) {
         className="w-full flex flex-col items-center gap-1"
       >
         <span className="self-start text-[17px] text-[#1f1f1f]">피부 히스토리</span>
-        <span className="text-black text-[16px] leading-none">{expanded ? "⌃" : "⌄"}</span>
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          className={
+            "text-[#6C6C6C] transition-transform duration-200 ease-out " +
+            (expanded ? "rotate-180" : "")
+          }
+        >
+          <path
+            d="M6 9l6 6 6-6"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </button>
 
       {expanded && (
@@ -109,7 +126,7 @@ export default function SkinHistorySection({ history, onAdd }) {
                     </div>
                     <span
                       className={
-                        "text-black text-[18px] transition-transform " +
+                        "mt-3 text-black text-[26px] transition-transform " +
                         (openItemId === item.id ? "rotate-90" : "")
                       }
                     >

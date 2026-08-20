@@ -30,7 +30,7 @@ export default function ProfileCard({ name, baseType, goalDate, onGoalDateChange
             {skinTypeLabel(baseType)}타입
           </div>
         </div>
-        <span className="text-[#6C6C6C] text-[16px]">›</span>
+        <span className="text-[#6C6C6C] text-[26px]">›</span>
       </Link>
 
       <div className="mt-3 pt-3 border-t border-[#00000014]">
