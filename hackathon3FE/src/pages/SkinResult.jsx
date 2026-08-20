@@ -498,23 +498,16 @@ export default function SkinResult() {
     >
       <div className="px-4 pb-24">
         {/* 화장품 성분 추천 */}
-        <section className="mb-6 mt-7">
-          <div
-            className="mb-4 rounded-2xl bg-cover bg-center bg-no-repeat px-5 py-7"
-            style={{
-              backgroundImage: `url(${resultPage1Image})`,
-              minHeight: 190,
-            }}
-          >
-            <div className="w-[60%]">
-              <h1
-                style={{
-                  fontWeight: 900,
-                  fontSize: 24,
-                  color: "#111",
-                  marginBottom: 4,
-                }}
-              >
+        <section className="mb-6 mt-7 ">
+          <div className="relative mb-4 rounded-2xl">
+            <img
+              src={resultPage1Image}
+              alt=""
+              className="block h-auto w-full"
+            />
+
+            <div className="absolute left-5 top-7 w-[63%]">
+              <h1 className="mb-1 text-2xl font-black text-[#111]">
                 화장품 성분 추천
               </h1>
 
@@ -540,9 +533,17 @@ export default function SkinResult() {
         {/* 피부 관리 루틴 */}
         <section className="mb-6">
           <div className="rounded-2xl bg-white p-5 shadow-sm">
-            <p className="mb-5 whitespace-pre-line text-sm leading-relaxed text-gray-500">
-              {cleaningText}
-            </p>
+            <div className="mb-5 rounded-xl border border-[#2d6a4a]/20 bg-[#2d6a4a]/5 px-4 py-3">
+              <div className="mb-2 flex items-center gap-2">
+                <span className="text-sm font-bold text-[#2d6a4a]">
+                  Skin Guide
+                </span>
+              </div>
+
+              <p className="whitespace-pre-line text-sm leading-relaxed text-gray-600">
+                {cleaningText}
+              </p>
+            </div>
 
             <h3
               style={{

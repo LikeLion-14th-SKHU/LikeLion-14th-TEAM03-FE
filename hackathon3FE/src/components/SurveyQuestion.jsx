@@ -10,11 +10,8 @@ export default function SurveyQuestion({
   const isMultiple = question.multiple;
 
   return (
-    <div className="flex flex-1 animate-[profileIn_500ms_ease-out_both] flex-col">
-      <p
-        className="relative m-0 text-center text-[16px] font-medium text-[#2a2a2a]"
-        style={{ marginTop: "15%" }}
-      >
+    <div className="flex min-h-0 flex-1 animate-[profileIn_500ms_ease-out_both] flex-col overflow-hidden">
+      <p className="relative m-0 mt-[50px] text-center text-[16px] font-medium text-[#2a2a2a]">
         <button
           type="button"
           aria-label="이전 질문"
@@ -40,8 +37,8 @@ export default function SurveyQuestion({
       </p>
 
       <h1
-        className="m-0 text-center text-[19px] leading-[1.45] text-[#2a2a2a]"
-        style={{ marginTop: "15%", fontWeight: 350 }}
+        className="m-0 mt-[55px] shrink-0 text-center text-[19px] leading-[1.45] text-[#2a2a2a]"
+        style={{ fontWeight: 350 }}
       >
         {question.question.map((line) => (
           <span key={line} className="block">
@@ -51,14 +48,10 @@ export default function SurveyQuestion({
       </h1>
 
       <div
-        className="mx-auto flex flex-col"
+        className="mx-auto mt-[55px] flex min-h-0 w-[75%] flex-1 flex-col overflow-y-auto pb-6"
         style={{
           rowGap: "24px",
-          width: "75%",
-          marginTop: isMultiple ? "10%" : "20%",
-          maxHeight: isMultiple ? "40vh" : "48vh",
-          overflowY: isMultiple ? "auto" : "visible",
-          padding: "2px 4px",
+          padding: "2px 4px 24px",
           scrollbarWidth: "none",
         }}
       >
@@ -75,7 +68,6 @@ export default function SurveyQuestion({
               onClick={() => {
                 const nextSelectedOption = onSelect(option.id);
 
-                // 단일 선택 질문만 선택 즉시 다음으로 이동
                 if (!isMultiple) {
                   onNext(nextSelectedOption);
                 }
@@ -88,7 +80,7 @@ export default function SurveyQuestion({
                 borderStyle: "solid",
                 borderWidth: "1px",
               }}
-              className="w-full cursor-pointer rounded-[10px] border-[#285E3C] px-4 text-[18px] text-[#2a2a2a] outline-none transition-[background-color,transform] duration-300 active:scale-[0.98]"
+              className="w-full cursor-pointer rounded-[10px] px-4 text-[18px] text-[#2a2a2a] outline-none transition-[background-color,transform] duration-300 active:scale-[0.98]"
             >
               <span
                 className={`inline-block transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
@@ -102,12 +94,11 @@ export default function SurveyQuestion({
         })}
       </div>
 
-      {/* 복수선택 질문에서만 다음 버튼 표시 */}
       {isMultiple && (
         <button
           type="button"
           onClick={() => onNext(selectedOption)}
-          className="absolute bottom-[3%] right-[7%] h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white outline-none transition-all duration-300 hover:bg-[#204C31] active:scale-95"
+          className="absolute bottom-[24px] right-[24px] h-[40px] w-[88px] cursor-pointer rounded-[8px] border-none bg-[#285E3C] text-[17px] font-medium text-white outline-none"
           style={{ color: "#FFFFFF" }}
         >
           다음
